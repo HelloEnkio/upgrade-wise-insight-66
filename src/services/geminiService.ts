@@ -19,6 +19,7 @@ class GeminiServiceClass {
 
   constructor() {
     this.initializeCounters();
+    console.log('Gemini key loaded:', Boolean(this.apiKey));
   }
 
   private initializeCounters() {
