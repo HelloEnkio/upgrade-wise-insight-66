@@ -9,7 +9,7 @@ const Index = () => {
   const [showMultiCompare, setShowMultiCompare] = useState(false);
   return <div className="min-h-screen bg-gradient-to-br from-tech-gray-50 via-white to-tech-neon/5 font-sans">
       <Header />
-      
+
       <main className="container mx-auto px-6">
         {/* Hero Section */}
         <div className="text-center pt-16 pb-20 animate-fade-in">
@@ -24,6 +24,11 @@ const Index = () => {
           <p className="text-lg text-tech-gray-500 mb-16">
             Get intelligent recommendations powered by <span className="text-tech-electric font-semibold">artificial intelligence</span>.
           </p>
+          {import.meta.env.VITE_DEPLOY_DATE && (
+            <p className="text-sm text-tech-gray-400 mb-8">
+              Last deployed: {import.meta.env.VITE_DEPLOY_DATE}
+            </p>
+          )}
         </div>
 
         {/* Comparison Form */}
