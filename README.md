@@ -30,7 +30,12 @@ git clone <YOUR_GIT_URL>
 cd <YOUR_PROJECT_NAME>
 
 # Step 3: Install the necessary dependencies.
-npm i
+# You can use the provided setup script which runs `npm ci`
+npm run setup
+# or
+./setup.sh
+# This will install all project dependencies including tools
+# such as `vite` and `@eslint/js`.
 
 # Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
