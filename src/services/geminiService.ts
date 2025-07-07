@@ -9,8 +9,11 @@ interface SpecsRequest {
 }
 
 class GeminiServiceClass {
-  // Configuration fixe côté backend - clé API non visible aux utilisateurs
-  private apiKey: string = 'AIzaSyDXXXXX-VOTRE_CLE_API_ICI'; // À remplacer par votre vraie clé
+  // Clé API chargée via les variables d'environnement
+  private apiKey: string =
+    (import.meta as any).env?.VITE_GEMINI_API_KEY ||
+    (process.env as any).GEMINI_API_KEY ||
+    '';
   private dailyRequestCount: number = 0;
   private lastResetDate: string = '';
   private readonly MAX_DAILY_REQUESTS = 490; // Sécurité: 490 au lieu de 500
