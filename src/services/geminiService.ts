@@ -170,6 +170,31 @@ Be accurate and comprehensive.`;
     return this.parseGeminiResponse(response);
   }
 
+  async getMultiComparison(products: string[]): Promise<any> {
+    const prompt = `Compare the following products and provide an overall analysis table:
+
+${products.join('\n')}
+
+Respond with a JSON object like:
+{
+  "categories": ["Performance", "Price", "Battery", "Display", "Storage", "Camera"],
+  "products": [
+    {
+      "name": "Product name",
+      "scores": { "Performance": 90, "Price": 80, ... },
+      "overallScore": 85,
+      "recommendation": "Best Choice",
+      "affiliateLink": "https://example.com"
+    }
+  ]
+}
+
+Only provide valid JSON.`;
+
+    const response = await this.callGeminiAPI(prompt);
+    return this.parseGeminiResponse(response);
+  }
+
   private parseGeminiResponse(response: any): any {
     try {
       const text = response.candidates?.[0]?.content?.parts?.[0]?.text;

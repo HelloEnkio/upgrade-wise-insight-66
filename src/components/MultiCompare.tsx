@@ -4,6 +4,18 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { X, Plus, CreditCard, Zap } from 'lucide-react';
 import MultiCompareResults from './MultiCompareResults';
+import { queueService } from '@/services/queueService';
+
+interface MultiComparisonData {
+  categories: string[];
+  products: {
+    name: string;
+    scores: Record<string, number>;
+    overallScore: number;
+    recommendation: string;
+    affiliateLink?: string;
+  }[];
+}
 
 interface MultiCompareProps {
   onClose: () => void;
@@ -14,6 +26,7 @@ const MultiCompare = ({ onClose }: MultiCompareProps) => {
   const [selectedPlan, setSelectedPlan] = useState<'basic' | 'premium' | null>(null);
   const [showResults, setShowResults] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [analysisData, setAnalysisData] = useState<MultiComparisonData | null>(null);
 
   const addProduct = () => {
     const maxProducts = selectedPlan === 'basic' ? 5 : selectedPlan === 'premium' ? 15 : 5;
@@ -36,12 +49,25 @@ const MultiCompare = ({ onClose }: MultiCompareProps) => {
 
   const handlePayAndAnalyze = async () => {
     if (!selectedPlan) return;
-    
+
     setIsProcessing(true);
-    // Simulation du paiement et de l'analyse
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsProcessing(false);
-    setShowResults(true);
+    try {
+      // simulate payment delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      const result = await queueService.addToQueue<MultiComparisonData>(
+        'multi-comparison',
+        { products: validProducts },
+        'high'
+      );
+
+      setAnalysisData(result);
+      setShowResults(true);
+    } catch (error) {
+      console.error('Multi comparison failed:', error);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const validProducts = products.filter(p => p.trim().length > 0);
@@ -49,11 +75,14 @@ const MultiCompare = ({ onClose }: MultiCompareProps) => {
 
   if (showResults) {
     return (
-      <MultiCompareResults 
-        products={validProducts}
+      <MultiCompareResults
+        data={analysisData!}
         plan={selectedPlan!}
         onClose={onClose}
-        onBackToForm={() => setShowResults(false)}
+        onBackToForm={() => {
+          setShowResults(false);
+          setAnalysisData(null);
+        }}
       />
     );
   }

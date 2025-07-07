@@ -17,37 +17,33 @@ import { useToast } from '@/hooks/use-toast';
 import html2canvas from 'html2canvas';
 import * as XLSX from 'xlsx';
 
+interface ProductData {
+  name: string;
+  scores: Record<string, number>;
+  overallScore: number;
+  recommendation: string;
+  affiliateLink?: string;
+}
+
+interface MultiComparisonData {
+  categories: string[];
+  products: ProductData[];
+}
+
 interface MultiCompareResultsProps {
-  products: string[];
+  data: MultiComparisonData;
   plan: 'basic' | 'premium';
   onClose: () => void;
   onBackToForm: () => void;
 }
 
-const MultiCompareResults = ({ products, plan, onClose, onBackToForm }: MultiCompareResultsProps) => {
+const MultiCompareResults = ({ data, plan, onClose, onBackToForm }: MultiCompareResultsProps) => {
   const [isConnoisseurView, setIsConnoisseurView] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const { toast } = useToast();
   const exportRef = useRef<HTMLDivElement>(null);
 
-  // Données simulées pour la démonstration
-  const comparisonData = {
-    categories: ['Performance', 'Price', 'Battery Life', 'Display', 'Storage', 'Camera'],
-    products: products.map((product, index) => ({
-      name: product,
-      scores: {
-        'Performance': Math.floor(Math.random() * 40) + 60,
-        'Price': Math.floor(Math.random() * 30) + 70,
-        'Battery Life': Math.floor(Math.random() * 35) + 65,
-        'Display': Math.floor(Math.random() * 25) + 75,
-        'Storage': Math.floor(Math.random() * 30) + 70,
-        'Camera': Math.floor(Math.random() * 20) + 80
-      },
-      overallScore: Math.floor(Math.random() * 25) + 75,
-      recommendation: index === 0 ? 'Best Choice' : index === 1 ? 'Good Value' : 'Consider',
-      affiliateLink: `https://example-store.com/search?q=${encodeURIComponent(product)}&ref=isbetter`
-    }))
-  };
+  const comparisonData = data;
 
   const handleExportImage = async () => {
     if (!exportRef.current) return;
@@ -183,7 +179,7 @@ const MultiCompareResults = ({ products, plan, onClose, onBackToForm }: MultiCom
               </button>
               <div>
                 <h2 className="text-2xl font-bold text-tech-dark">Multi-Product Analysis</h2>
-                <p className="text-tech-gray-600">{products.length} products compared • {plan} plan</p>
+                <p className="text-tech-gray-600">{comparisonData.products.length} products compared • {plan} plan</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">

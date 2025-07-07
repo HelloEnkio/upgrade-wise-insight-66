@@ -2,7 +2,7 @@
 interface QueuedRequest {
   id: string;
   priority: 'high' | 'normal' | 'low';
-  type: 'comparison' | 'specs' | 'cache-update';
+  type: 'comparison' | 'specs' | 'cache-update' | 'multi-comparison';
   data: any;
   resolve: (value: any) => void;
   reject: (error: any) => void;
