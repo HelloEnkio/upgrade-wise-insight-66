@@ -75,8 +75,8 @@ export const useMockData = () => {
       // Check cache first
       const cacheKey = `${currentDevice}|${newDevice}`;
       const cachedResult = cacheService.get('COMPARISON', cacheKey);
-      
-      if (cachedResult && !cachedResult._expired) {
+
+      if (cachedResult) {
         console.log('Using cached comparison data');
         setIsLoading(false);
         return cachedResult;
