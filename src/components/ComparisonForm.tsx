@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { geminiService } from '@/services/geminiService';
 import { useComparisonForm } from '@/hooks/useComparisonForm';
 import ModelSelector from './ModelSelector';
 import ComparisonResult from './ComparisonResult';
@@ -38,7 +37,7 @@ const ComparisonForm = () => {
   } = useComparisonForm();
 
   // Show queue status if quota is exceeded
-  if (showQueueStatus || geminiService.isQuotaExceeded()) {
+  if (showQueueStatus) {
     return (
       <div className="w-full max-w-2xl mx-auto animate-slide-up space-y-6">
         <QueueStatus isVisible={true} />

@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Clock, Users, AlertCircle } from 'lucide-react';
 import { geminiService } from '@/services/geminiService';
+import { queueService } from '@/services/queueService';
 
 interface QueueStatusProps {
   isVisible: boolean;
@@ -11,24 +12,27 @@ interface QueueStatusProps {
 
 const QueueStatus = ({ isVisible }: QueueStatusProps) => {
   const [status, setStatus] = useState({
-    queueLength: 12,
-    position: 8,
-    estimatedWaitTime: 45000 // 45 seconds
+    queueLength: 0,
+    position: 0,
+    requestsRemaining: 0,
+    timeUntilReset: 0,
+    estimatedWaitTime: 0
   });
 
   useEffect(() => {
     if (!isVisible) return;
 
-    const updateStatus = () => {
-      // Simulation of realistic queue
-      setStatus(prev => ({
-        queueLength: Math.max(1, prev.queueLength - Math.floor(Math.random() * 2)),
-        position: Math.max(1, prev.position - Math.floor(Math.random() * 2)),
-        estimatedWaitTime: Math.max(5000, prev.estimatedWaitTime - 2000)
-      }));
+    const fetchStatus = async () => {
+      try {
+        const s = await queueService.getQueueStatus();
+        setStatus(s);
+      } catch (e) {
+        console.error('Failed to fetch queue status', e);
+      }
     };
 
-    const interval = setInterval(updateStatus, 3000);
+    fetchStatus();
+    const interval = setInterval(fetchStatus, 3000);
     return () => clearInterval(interval);
   }, [isVisible]);
 
@@ -42,8 +46,12 @@ const QueueStatus = ({ isVisible }: QueueStatusProps) => {
     return `${minutes}m ${remainingSeconds}s`;
   };
 
-  const progressValue = Math.max(0, 100 - (status.position / status.queueLength) * 100);
-  const usage = geminiService.getDailyUsage();
+  const progressValue = status.queueLength > 0 ? Math.max(0, 100 - (status.position / status.queueLength) * 100) : 0;
+  const [usage, setUsage] = useState({ used: 0, limit: 0 });
+
+  useEffect(() => {
+    geminiService.getDailyUsage().then(setUsage);
+  }, []);
 
   return (
     <Card className="bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200 shadow-lg">

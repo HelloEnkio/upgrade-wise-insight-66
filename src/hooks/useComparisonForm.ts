@@ -91,9 +91,9 @@ export const useComparisonForm = () => {
     
     if (currentProduct.trim() && newProduct.trim()) {
       console.log('Comparing:', currentProduct, 'vs', newProduct);
-      
+
       // Check first if quota isn't exceeded
-      if (geminiService.isQuotaExceeded()) {
+      if (await geminiService.isQuotaExceeded()) {
         setShowQueueStatus(true);
         return;
       }
