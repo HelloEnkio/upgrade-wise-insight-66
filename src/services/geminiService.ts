@@ -1,4 +1,6 @@
 
+import { sanitizeInput } from '@/utils/sanitize';
+
 interface GeminiRequest {
   currentDevice: string;
   newDevice: string;
@@ -138,10 +140,12 @@ class GeminiServiceClass {
   }
 
   async getProductComparison(currentDevice: string, newDevice: string): Promise<any> {
+    const safeCurrent = sanitizeInput(currentDevice);
+    const safeNew = sanitizeInput(newDevice);
     const prompt = `Compare these two devices and provide a detailed analysis:
-    
-Current device: ${currentDevice}
-New device: ${newDevice}
+
+Current device: ${safeCurrent}
+New device: ${safeNew}
 
 Please respond with a JSON object containing:
 - recommendation: "upgrade" | "keep" | "maybe"
@@ -157,7 +161,8 @@ Focus on performance, features, value, and user experience. Be objective and hel
   }
 
   async getProductSpecs(productName: string): Promise<any> {
-    const prompt = `Provide detailed technical specifications for: ${productName}
+    const safeName = sanitizeInput(productName);
+    const prompt = `Provide detailed technical specifications for: ${safeName}
 
 Please respond with a JSON object containing comprehensive specs including:
 - Basic specifications
