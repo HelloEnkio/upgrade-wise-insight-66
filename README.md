@@ -60,6 +60,12 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Setting up the Gemini API key
+
+1. Copy `.env.example` to `.env`.
+2. Add your Google Gemini API key to `VITE_GEMINI_API_KEY`.
+3. Restart the development server so Vite can pick up the changes.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/e7add94a-b181-432f-91dd-b205b8a3f9ed) and click on Share -> Publish.
