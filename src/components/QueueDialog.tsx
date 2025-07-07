@@ -23,7 +23,7 @@ const PongGame = () => {
 
     let animationId: number;
     let ball = { x: 200, y: 150, dx: 2, dy: 2, radius: 5 };
-    let paddle = { x: 175, y: 250, width: 50, height: 10 };
+    const paddle = { x: 175, y: 250, width: 50, height: 10 };
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);

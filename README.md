@@ -71,3 +71,14 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+## Configuration
+
+Create a `.env` file based on `.env.example` and provide your Gemini API key:
+
+```bash
+cp .env.example .env
+# Edit .env and set VITE_GEMINI_API_KEY=<your Gemini key>
+```
+
+The application uses the free Gemini 2.5 Flash model with a daily limit of 500 requests. The code enforces a safety threshold of 490 requests per day to avoid hitting the quota.

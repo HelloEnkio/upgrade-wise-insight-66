@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMockData } from '@/hooks/useMockData';
 import { geminiService } from '@/services/geminiService';
+import { useToast } from '@/hooks/use-toast';
 
 interface ModelOption {
   id: string;
@@ -62,8 +63,10 @@ export const useComparisonForm = () => {
   const [showPreciseSpecs, setShowPreciseSpecs] = useState(false);
   const [notFoundProduct, setNotFoundProduct] = useState('');
   const [preciseDevice, setPreciseDevice] = useState('');
+
+  const { toast } = useToast();
   
-  const { isLoading, queueVisible, getModelOptions, simulateAnalysis } = useMockData();
+  const { isLoading, getModelOptions, simulateAnalysis } = useMockData();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,8 +118,17 @@ export const useComparisonForm = () => {
       }
       
       // Proceed directly to comparison
-      const result = await simulateAnalysis(currentProduct, newProduct);
-      setComparisonResult(result);
+      try {
+        const result = await simulateAnalysis(currentProduct, newProduct);
+        setComparisonResult(result);
+      } catch (error) {
+        console.error('Comparison failed:', error);
+        toast({
+          title: 'Analysis Error',
+          description: 'Unable to analyze these products. Please try again later.',
+          variant: 'destructive'
+        });
+      }
     }
   };
 
@@ -128,11 +140,20 @@ export const useComparisonForm = () => {
     const otherDevice = preciseDevice === currentProduct ? newProduct : currentProduct;
     
     // Simulate analysis with precise specs
-    const result = await simulateAnalysis(
-      preciseDevice === currentProduct ? detailedDevice : otherDevice,
-      preciseDevice === currentProduct ? otherDevice : detailedDevice
-    );
-    setComparisonResult(result);
+    try {
+      const result = await simulateAnalysis(
+        preciseDevice === currentProduct ? detailedDevice : otherDevice,
+        preciseDevice === currentProduct ? otherDevice : detailedDevice
+      );
+      setComparisonResult(result);
+    } catch (error) {
+      console.error('Precise analysis failed:', error);
+      toast({
+        title: 'Analysis Error',
+        description: 'Unable to analyze these products. Please try again later.',
+        variant: 'destructive'
+      });
+    }
   };
 
   const handleCurrentModelSelect = (model: ModelOption) => {
@@ -148,7 +169,15 @@ export const useComparisonForm = () => {
     } else {
       // Proceed to comparison
       simulateAnalysis(model.name + ' ' + model.year, newProduct)
-        .then(result => setComparisonResult(result));
+        .then(result => setComparisonResult(result))
+        .catch(error => {
+          console.error('Comparison failed:', error);
+          toast({
+            title: 'Analysis Error',
+            description: 'Unable to analyze these products. Please try again later.',
+            variant: 'destructive'
+          });
+        });
     }
   };
 
@@ -161,8 +190,17 @@ export const useComparisonForm = () => {
       selectedCurrent.name + ' ' + selectedCurrent.year : 
       currentProduct;
     
-    const result = await simulateAnalysis(currentDeviceName, model.name + ' ' + model.year);
-    setComparisonResult(result);
+    try {
+      const result = await simulateAnalysis(currentDeviceName, model.name + ' ' + model.year);
+      setComparisonResult(result);
+    } catch (error) {
+      console.error('Comparison failed:', error);
+      toast({
+        title: 'Analysis Error',
+        description: 'Unable to analyze these products. Please try again later.',
+        variant: 'destructive'
+      });
+    }
   };
 
   const resetForm = () => {

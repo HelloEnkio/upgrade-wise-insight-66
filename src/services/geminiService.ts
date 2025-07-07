@@ -9,12 +9,13 @@ interface SpecsRequest {
 }
 
 class GeminiServiceClass {
-  // Configuration fixe côté backend - clé API non visible aux utilisateurs
-  private apiKey: string = 'AIzaSyDXXXXX-VOTRE_CLE_API_ICI'; // À remplacer par votre vraie clé
+  // Clé API chargée depuis les variables d'environnement (Vite)
+  private apiKey: string = import.meta.env.VITE_GEMINI_API_KEY ?? '';
   private dailyRequestCount: number = 0;
   private lastResetDate: string = '';
   private readonly MAX_DAILY_REQUESTS = 490; // Sécurité: 490 au lieu de 500
-  private readonly GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+  // Utilise le modèle Gemini 2.5 Flash en version gratuite
+  private readonly GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
   private readonly ADMIN_EMAIL = 'votre-email@example.com'; // Email pour les alertes
 
   constructor() {
@@ -98,7 +99,7 @@ class GeminiServiceClass {
   }
 
   private async callGeminiAPI(prompt: string): Promise<any> {
-    if (!this.apiKey || this.apiKey.includes('XXXX')) {
+    if (!this.apiKey) {
       throw new Error('Clé API Gemini non configurée côté serveur - Contactez l\'administrateur');
     }
 
