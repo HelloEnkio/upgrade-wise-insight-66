@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useMockData } from '@/hooks/useMockData';
+import { useGeminiData } from '@/hooks/useGeminiData';
 import { geminiService } from '@/services/geminiService';
 
 interface ModelOption {
@@ -63,7 +63,7 @@ export const useComparisonForm = () => {
   const [notFoundProduct, setNotFoundProduct] = useState('');
   const [preciseDevice, setPreciseDevice] = useState('');
   
-  const { isLoading, queueVisible, getModelOptions, simulateAnalysis } = useMockData();
+  const { isLoading, getModelOptions, simulateAnalysis } = useGeminiData();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
