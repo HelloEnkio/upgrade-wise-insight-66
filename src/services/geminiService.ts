@@ -9,12 +9,10 @@ interface SpecsRequest {
 }
 
 class GeminiServiceClass {
-  // Configuration fixe côté backend - clé API non visible aux utilisateurs
-  private apiKey: string = 'AIzaSyDXXXXX-VOTRE_CLE_API_ICI'; // À remplacer par votre vraie clé
+  // Quota management handled client side; API key lives on the server
   private dailyRequestCount: number = 0;
   private lastResetDate: string = '';
   private readonly MAX_DAILY_REQUESTS = 490; // Sécurité: 490 au lieu de 500
-  private readonly GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
   private readonly ADMIN_EMAIL = 'votre-email@example.com'; // Email pour les alertes
 
   constructor() {
@@ -97,32 +95,16 @@ class GeminiServiceClass {
   }
 
   private async callGeminiAPI(prompt: string): Promise<any> {
-    if (!this.apiKey || this.apiKey.includes('XXXX')) {
-      throw new Error('Clé API Gemini non configurée côté serveur - Contactez l\'administrateur');
-    }
-
     if (!this.checkDailyLimit()) {
       throw new Error(`Service temporairement indisponible. Réessayez demain.`);
     }
 
-    const response = await fetch(`${this.GEMINI_API_URL}?key=${this.apiKey}`, {
+    const response = await fetch('/api/gemini', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{
-            text: prompt
-          }]
-        }],
-        generationConfig: {
-          temperature: 0.7,
-          topK: 40,
-          topP: 0.95,
-          maxOutputTokens: 2048,
-        }
-      })
+      body: JSON.stringify({ prompt })
     });
 
     if (!response.ok) {

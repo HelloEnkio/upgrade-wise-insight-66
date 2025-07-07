@@ -71,3 +71,10 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+## Gemini API setup
+
+Requests to Google Gemini are now proxied through `/api/gemini`. Configure an environment
+variable called `GEMINI_API_KEY` on your hosting platform so the serverless
+function can authenticate with Google. The key no longer needs to be exposed to
+the front-end.
