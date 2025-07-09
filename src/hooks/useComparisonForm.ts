@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useMockData } from '@/hooks/useMockData';
+import { logDevError } from '@/lib/devLogger';
 import { geminiService } from '@/services/geminiService';
 import { useToast } from '@/hooks/use-toast';
 
@@ -123,6 +124,7 @@ export const useComparisonForm = () => {
         setComparisonResult(result);
       } catch (error) {
         console.error('Comparison failed:', error);
+        logDevError('Comparison failed', error);
         toast({
           title: 'Analysis Error',
           description: 'Unable to analyze these products. Please try again later.',
@@ -148,6 +150,7 @@ export const useComparisonForm = () => {
       setComparisonResult(result);
     } catch (error) {
       console.error('Precise analysis failed:', error);
+      logDevError('Precise analysis failed', error);
       toast({
         title: 'Analysis Error',
         description: 'Unable to analyze these products. Please try again later.',
@@ -172,6 +175,7 @@ export const useComparisonForm = () => {
         .then(result => setComparisonResult(result))
         .catch(error => {
           console.error('Comparison failed:', error);
+          logDevError('Comparison failed', error);
           toast({
             title: 'Analysis Error',
             description: 'Unable to analyze these products. Please try again later.',
@@ -195,6 +199,7 @@ export const useComparisonForm = () => {
       setComparisonResult(result);
     } catch (error) {
       console.error('Comparison failed:', error);
+      logDevError('Comparison failed', error);
       toast({
         title: 'Analysis Error',
         description: 'Unable to analyze these products. Please try again later.',

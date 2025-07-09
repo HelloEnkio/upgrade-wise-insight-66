@@ -3,6 +3,7 @@ import { mockModels, type ModelOption } from '@/data/mockModels';
 import { areProductsComparable, generateIncompatibleExplanation } from '@/utils/productCategories';
 import { queueService } from '@/services/queueService';
 import { cacheService } from '@/services/cacheService';
+import { logDevError } from '@/lib/devLogger';
 
 interface ComparisonData {
   currentDevice: string;
@@ -98,12 +99,14 @@ export const useMockData = () => {
 
       } catch (error) {
         console.error('Failed to get real data:', error);
+        logDevError('Failed to get real data', error);
         setIsLoading(false);
         throw error;
       }
       
     } catch (error) {
       console.error('Analysis failed:', error);
+      logDevError('Analysis failed', error);
       setIsLoading(false);
       throw error;
     }
