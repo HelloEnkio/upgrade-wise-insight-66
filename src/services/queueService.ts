@@ -1,4 +1,6 @@
 
+import { logDevError } from '@/lib/devLogger';
+
 interface QueuedRequest {
   id: string;
   priority: 'high' | 'normal' | 'low';
@@ -76,6 +78,7 @@ class QueueService {
         request.resolve(result);
       } catch (error) {
         console.error('Queue processing error:', error);
+        logDevError('Queue processing error', error);
         request.reject(error);
       }
 
