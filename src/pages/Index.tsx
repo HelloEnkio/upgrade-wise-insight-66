@@ -5,6 +5,7 @@ import HowItWorks from '@/components/HowItWorks';
 import Footer from '@/components/Footer';
 import MultiCompareButton from '@/components/MultiCompareButton';
 import MultiCompare from '@/components/MultiCompare';
+import DevLog from '@/components/DevLog';
 const Index = () => {
   const [showMultiCompare, setShowMultiCompare] = useState(false);
   return <div className="min-h-screen bg-gradient-to-br from-tech-gray-50 via-white to-tech-neon/5 font-sans">
@@ -64,6 +65,7 @@ const Index = () => {
       
       {/* Multi Compare Modal */}
       {showMultiCompare && <MultiCompare onClose={() => setShowMultiCompare(false)} />}
+
+      <DevLog />
     </div>;
-};
-export default Index;
+};export default Index;

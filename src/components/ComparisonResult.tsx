@@ -6,6 +6,7 @@ import { CheckCircle, XCircle, AlertTriangle, ShoppingCart } from 'lucide-react'
 import TechnicalView from './TechnicalView';
 import MultiCompareButton from './MultiCompareButton';
 import MultiCompare from './MultiCompare';
+import DevLog from './DevLog';
 
 interface ComparisonData {
   currentDevice: string;
@@ -253,6 +254,8 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
       {showMultiCompare && (
         <MultiCompare onClose={() => setShowMultiCompare(false)} />
       )}
+
+      <DevLog />
     </>
   );
 };
