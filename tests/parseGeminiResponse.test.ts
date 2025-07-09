@@ -14,4 +14,21 @@ describe('parseGeminiResponse', () => {
     const result = parseGeminiResponse(response);
     expect(result).toEqual({ name: 'John', age: 30 });
   });
+
+  it('finds the first text part if initial part has no text', () => {
+    const response = {
+      candidates: [
+        {
+          content: {
+            parts: [
+              { inlineData: { data: 'ignored', mimeType: 'text/plain' } },
+              { text: '{"ok":true}' }
+            ]
+          }
+        }
+      ]
+    } as any;
+    const result = parseGeminiResponse(response);
+    expect(result).toEqual({ ok: true });
+  });
 });

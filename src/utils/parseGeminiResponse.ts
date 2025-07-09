@@ -1,7 +1,16 @@
 import { jsonrepair } from 'jsonrepair';
 
 export function parseGeminiResponse(response: any): any {
-  const text = response?.candidates?.[0]?.content?.parts?.[0]?.text;
+  const parts = response?.candidates?.[0]?.content?.parts;
+  let text: string | undefined;
+  if (Array.isArray(parts)) {
+    for (const part of parts) {
+      if (typeof part.text === 'string') {
+        text = part.text;
+        break;
+      }
+    }
+  }
   if (!text) {
     throw new Error('Invalid response format from Gemini');
   }
