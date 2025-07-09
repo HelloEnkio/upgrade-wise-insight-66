@@ -110,6 +110,8 @@ class GeminiServiceClass {
       throw new Error(`Service temporairement indisponible. Réessayez demain.`);
     }
 
+    console.log('Gemini request prompt:', prompt);
+
     const response = await fetch(`${this.GEMINI_API_URL}?key=${this.apiKey}`, {
       method: 'POST',
       headers: {
@@ -136,8 +138,11 @@ class GeminiServiceClass {
       throw new Error(`Service d'analyse temporairement indisponible. Réessayez dans quelques instants.`);
     }
 
+    const json = await response.json();
+    console.log('Gemini raw response:', JSON.stringify(json));
+
     this.incrementRequestCount();
-    return response.json();
+    return json;
   }
 
   async getProductComparison(currentDevice: string, newDevice: string): Promise<any> {
@@ -158,7 +163,12 @@ Please respond with a JSON object containing:
 Focus on performance, features, value, and user experience. Be objective and helpful.`;
 
     const response = await this.callGeminiAPI(prompt);
-    return parseGeminiResponse(response);
+    try {
+      return parseGeminiResponse(response);
+    } catch (error) {
+      console.error('Failed to parse Gemini response', { prompt, response });
+      throw error;
+    }
   }
 
   async getProductSpecs(productName: string): Promise<any> {
@@ -175,7 +185,12 @@ Please respond with a JSON object containing comprehensive specs including:
 Be accurate and comprehensive.`;
 
     const response = await this.callGeminiAPI(prompt);
-    return parseGeminiResponse(response);
+    try {
+      return parseGeminiResponse(response);
+    } catch (error) {
+      console.error('Failed to parse Gemini response', { prompt, response });
+      throw error;
+    }
   }
 
   async getMultiComparison(products: string[]): Promise<any> {
@@ -200,7 +215,12 @@ Respond with a JSON object like:
 Only provide valid JSON.`;
 
     const response = await this.callGeminiAPI(prompt);
-    return parseGeminiResponse(response);
+    try {
+      return parseGeminiResponse(response);
+    } catch (error) {
+      console.error('Failed to parse Gemini response', { prompt, response });
+      throw error;
+    }
   }
 
 
