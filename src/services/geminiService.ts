@@ -1,5 +1,6 @@
 
 import { sanitizeInput } from '@/utils/sanitize';
+import { parseGeminiResponse } from '@/utils/parseGeminiResponse';
 
 interface GeminiRequest {
   currentDevice: string;
@@ -157,7 +158,7 @@ Please respond with a JSON object containing:
 Focus on performance, features, value, and user experience. Be objective and helpful.`;
 
     const response = await this.callGeminiAPI(prompt);
-    return this.parseGeminiResponse(response);
+    return parseGeminiResponse(response);
   }
 
   async getProductSpecs(productName: string): Promise<any> {
@@ -174,7 +175,7 @@ Please respond with a JSON object containing comprehensive specs including:
 Be accurate and comprehensive.`;
 
     const response = await this.callGeminiAPI(prompt);
-    return this.parseGeminiResponse(response);
+    return parseGeminiResponse(response);
   }
 
   async getMultiComparison(products: string[]): Promise<any> {
@@ -199,28 +200,9 @@ Respond with a JSON object like:
 Only provide valid JSON.`;
 
     const response = await this.callGeminiAPI(prompt);
-    return this.parseGeminiResponse(response);
+    return parseGeminiResponse(response);
   }
 
-  private parseGeminiResponse(response: any): any {
-    try {
-      const text = response.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!text) {
-        throw new Error('Invalid response format from Gemini');
-      }
-
-      // Try to extract JSON from the response
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        return JSON.parse(jsonMatch[0]);
-      }
-      
-      throw new Error('No JSON found in Gemini response');
-    } catch (error) {
-      console.error('Error parsing Gemini response:', error);
-      throw new Error('Erreur lors du traitement de la réponse IA');
-    }
-  }
 
   getDailyUsage() {
     return {
