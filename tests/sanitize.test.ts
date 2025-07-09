@@ -12,7 +12,7 @@ describe('sanitizeInput', () => {
 
   it('escapes quotes and backticks', () => {
     const input = 'He said "hi" and it\'s ok';
-    expect(sanitizeInput(input)).toBe('He said \\\"hi\\\" and it\\\'s ok');
+    expect(sanitizeInput(input)).toBe('He said \\"hi\\" and it\\\'s ok');
   });
 
   it('handles injection attempts', () => {

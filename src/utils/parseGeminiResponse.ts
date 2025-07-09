@@ -12,6 +12,7 @@ export function parseGeminiResponse(response: any): any {
     }
   }
   if (!text) {
+    console.error('Invalid Gemini response format:', JSON.stringify(response));
     throw new Error('Invalid response format from Gemini');
   }
 
