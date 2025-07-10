@@ -10,11 +10,8 @@ const mockData = {
   newDevice: 'Device B',
   recommendation: 'upgrade' as const,
   score: 90,
-  reasons: ['Better performance'],
-  specs: [
-    { category: 'processor', current: 'A1', new: 'B1', improvement: 'better' as const }
-  ],
-  technicalSpecs: [
+  takeHome: 'Better performance overall',
+  connoisseurSpecs: [
     {
       category: 'CPU',
       current: { value: 'A1', technical: 'specA' },
@@ -36,12 +33,8 @@ describe('ComparisonResult', () => {
     expect(screen.queryByText('Detailed Technical Analysis')).toBeNull();
   });
 
-  it('renders comparison table headers with device names', () => {
+  it('renders summary in default view', () => {
     render(<ComparisonResult data={mockData} onReset={() => {}} />);
-    expect(screen.getByRole('columnheader', { name: /component/i })).toBeInTheDocument();
-    expect(screen.getByRole('columnheader', { name: /device a/i })).toBeInTheDocument();
-    expect(screen.getByRole('columnheader', { name: /impact/i })).toBeInTheDocument();
-    expect(screen.getByRole('columnheader', { name: /device b/i })).toBeInTheDocument();
-    expect(screen.getByRole('columnheader', { name: /why better/i })).toBeInTheDocument();
+    expect(screen.getByText(/Better performance overall/i)).toBeInTheDocument();
   });
 });

@@ -10,14 +10,8 @@ interface ComparisonData {
   newDevice: string;
   recommendation: 'upgrade' | 'keep' | 'maybe';
   score: number;
-  reasons: string[];
-  specs: {
-    category: string;
-    current: string;
-    new: string;
-    improvement: 'better' | 'worse' | 'same';
-  }[];
-  technicalSpecs: {
+  takeHome: string;
+  connoisseurSpecs: {
     category: string;
     subcategory?: string;
     current: {
@@ -75,7 +69,7 @@ export const useMockData = () => {
       const cacheKey = `${currentDevice}|${newDevice}`;
       const cachedResult = cacheService.get('COMPARISON', cacheKey);
 
-      if (cachedResult && Array.isArray(cachedResult.technicalSpecs) && cachedResult.technicalSpecs.length > 0) {
+      if (cachedResult && Array.isArray(cachedResult.connoisseurSpecs) && cachedResult.connoisseurSpecs.length > 0) {
         console.log('Using cached comparison data');
         setIsLoading(false);
         return cachedResult;

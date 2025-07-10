@@ -20,14 +20,8 @@ interface ComparisonData {
   newDevice: string;
   recommendation: 'upgrade' | 'keep' | 'maybe';
   score: number;
-  reasons: string[];
-  specs: {
-    category: string;
-    current: string;
-    new: string;
-    improvement: 'better' | 'worse' | 'same';
-  }[];
-  technicalSpecs: {
+  takeHome: string;
+  connoisseurSpecs: {
     category: string;
     subcategory?: string;
     current: {
@@ -185,78 +179,18 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
 
         {/* Conditional View */}
         {isConnoisseurView ? (
-          <TechnicalView 
+          <TechnicalView
             currentDevice={data.currentDevice}
             newDevice={data.newDevice}
-            specs={data.technicalSpecs}
+            specs={data.connoisseurSpecs}
           />
         ) : (
-          <>
-            {/* Comparaison des spécifications */}
-            <Card className="bg-white/80 backdrop-blur-sm border border-tech-gray-200 shadow-soft">
-              <CardContent className="p-8">
-                <h3 className="text-xl font-bold text-tech-dark mb-6">Technical Comparison</h3>
-                <div className="overflow-x-auto">
-                  <Table className="w-full text-sm">
-                    <TableHeader>
-                      <TableRow className="bg-tech-gray-100 text-tech-dark">
-                        <TableHead scope="col" className="px-6 py-3 font-bold">Component</TableHead>
-                        <TableHead scope="col" className="px-6 py-3 text-center font-bold">{data.currentDevice}</TableHead>
-                        <TableHead scope="col" className="px-6 py-3 text-center font-bold">Impact</TableHead>
-                        <TableHead scope="col" className="px-6 py-3 text-center font-bold">{data.newDevice}</TableHead>
-                        <TableHead scope="col" className="px-6 py-3 text-center font-bold">Why Better?</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody className="divide-y divide-tech-gray-200">
-                      {data.specs.map((spec, index) => (
-                        <React.Fragment key={index}>
-                          <TableRow className="odd:bg-white even:bg-tech-gray-50">
-                            <TableCell className="px-6 py-3 font-semibold text-tech-dark">
-                              {spec.category}
-                            </TableCell>
-                            <TableCell className="px-6 py-3 text-center text-tech-gray-600">
-                              {spec.current}
-                            </TableCell>
-                            <TableCell className="px-6 py-3 text-center">
-                              {getImprovementIcon(spec.improvement)}
-                            </TableCell>
-                            <TableCell className="px-6 py-3 text-center font-semibold text-tech-dark">
-                              {spec.new}
-                            </TableCell>
-                            <TableCell className="px-6 py-3 text-center">
-                              <span className="text-xs text-tech-gray-600 font-medium">
-                                {getBriefExplanation(spec.category, spec.improvement)}
-                              </span>
-                            </TableCell>
-                          </TableRow>
-                          {data.reasons[index] && (
-                            <TableRow>
-                              <TableCell
-                                colSpan={5}
-                                className="border-t border-tech-gray-200 px-6 pt-2 pb-4 text-tech-gray-700 text-sm"
-                              >
-                                {data.reasons[index]}
-                              </TableCell>
-                            </TableRow>
-                          )}
-                        </React.Fragment>
-                      ))}
-                      {data.reasons.slice(data.specs.length).map((reason, index) => (
-                          <TableRow key={`extra-${index}`}>
-                            <TableCell
-                              colSpan={5}
-                              className="px-6 py-3 bg-tech-gray-50 text-tech-gray-700 text-sm"
-                            >
-                              {reason}
-                            </TableCell>
-                          </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
-          </>
+          <Card className="bg-white/80 backdrop-blur-sm border border-tech-gray-200 shadow-soft">
+            <CardContent className="p-8">
+              <h3 className="text-xl font-bold text-tech-dark mb-6">Take Home Summary</h3>
+              <p className="text-tech-gray-700 whitespace-pre-line">{data.takeHome}</p>
+            </CardContent>
+          </Card>
         )}
 
         {/* Bouton pour recommencer */}
