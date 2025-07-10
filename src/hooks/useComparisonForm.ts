@@ -3,6 +3,7 @@ import { useMockData } from '@/hooks/useMockData';
 import { logDevError } from '@/lib/devLogger';
 import { geminiService } from '@/services/geminiService';
 import { useToast } from '@/hooks/use-toast';
+import { GeminiParseError, GeminiTokenLimitError } from '@/utils/geminiErrors';
 
 interface ModelOption {
   id: string;
@@ -125,11 +126,25 @@ export const useComparisonForm = () => {
       } catch (error) {
         console.error('Comparison failed:', error);
         logDevError('Comparison failed', error);
-        toast({
-          title: 'Analysis Error',
-          description: 'Unable to analyze these products. Please try again later.',
-          variant: 'destructive'
-        });
+        if (error instanceof GeminiTokenLimitError) {
+          toast({
+            title: 'Response Too Long',
+            description: 'The AI response exceeded the token limit.',
+            variant: 'destructive'
+          });
+        } else if (error instanceof GeminiParseError) {
+          toast({
+            title: 'AI Error',
+            description: 'The AI returned an unexpected response.',
+            variant: 'destructive'
+          });
+        } else {
+          toast({
+            title: 'Analysis Error',
+            description: 'Unable to analyze these products. Please try again later.',
+            variant: 'destructive'
+          });
+        }
       }
     }
   };
@@ -151,11 +166,25 @@ export const useComparisonForm = () => {
     } catch (error) {
       console.error('Precise analysis failed:', error);
       logDevError('Precise analysis failed', error);
-      toast({
-        title: 'Analysis Error',
-        description: 'Unable to analyze these products. Please try again later.',
-        variant: 'destructive'
-      });
+      if (error instanceof GeminiTokenLimitError) {
+        toast({
+          title: 'Response Too Long',
+          description: 'The AI response exceeded the token limit.',
+          variant: 'destructive'
+        });
+      } else if (error instanceof GeminiParseError) {
+        toast({
+          title: 'AI Error',
+          description: 'The AI returned an unexpected response.',
+          variant: 'destructive'
+        });
+      } else {
+        toast({
+          title: 'Analysis Error',
+          description: 'Unable to analyze these products. Please try again later.',
+          variant: 'destructive'
+        });
+      }
     }
   };
 
@@ -176,11 +205,25 @@ export const useComparisonForm = () => {
         .catch(error => {
           console.error('Comparison failed:', error);
           logDevError('Comparison failed', error);
-          toast({
-            title: 'Analysis Error',
-            description: 'Unable to analyze these products. Please try again later.',
-            variant: 'destructive'
-          });
+          if (error instanceof GeminiTokenLimitError) {
+            toast({
+              title: 'Response Too Long',
+              description: 'The AI response exceeded the token limit.',
+              variant: 'destructive'
+            });
+          } else if (error instanceof GeminiParseError) {
+            toast({
+              title: 'AI Error',
+              description: 'The AI returned an unexpected response.',
+              variant: 'destructive'
+            });
+          } else {
+            toast({
+              title: 'Analysis Error',
+              description: 'Unable to analyze these products. Please try again later.',
+              variant: 'destructive'
+            });
+          }
         });
     }
   };
@@ -200,11 +243,25 @@ export const useComparisonForm = () => {
     } catch (error) {
       console.error('Comparison failed:', error);
       logDevError('Comparison failed', error);
-      toast({
-        title: 'Analysis Error',
-        description: 'Unable to analyze these products. Please try again later.',
-        variant: 'destructive'
-      });
+      if (error instanceof GeminiTokenLimitError) {
+        toast({
+          title: 'Response Too Long',
+          description: 'The AI response exceeded the token limit.',
+          variant: 'destructive'
+        });
+      } else if (error instanceof GeminiParseError) {
+        toast({
+          title: 'AI Error',
+          description: 'The AI returned an unexpected response.',
+          variant: 'destructive'
+        });
+      } else {
+        toast({
+          title: 'Analysis Error',
+          description: 'Unable to analyze these products. Please try again later.',
+          variant: 'destructive'
+        });
+      }
     }
   };
 

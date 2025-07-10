@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { parseGeminiResponse } from '../src/utils/parseGeminiResponse';
+import { GeminiParseError, GeminiTokenLimitError } from '../src/utils/geminiErrors';
 
 const buildResponse = (text: string) => ({
   candidates: [
@@ -30,5 +31,15 @@ describe('parseGeminiResponse', () => {
     } as any;
     const result = parseGeminiResponse(response);
     expect(result).toEqual({ ok: true });
+  });
+
+  it('throws GeminiParseError when JSON is missing', () => {
+    const response = buildResponse('No JSON here');
+    expect(() => parseGeminiResponse(response)).toThrow(GeminiParseError);
+  });
+
+  it('throws GeminiTokenLimitError on token limit message', () => {
+    const response = buildResponse('Error: token limit exceeded');
+    expect(() => parseGeminiResponse(response)).toThrow(GeminiTokenLimitError);
   });
 });

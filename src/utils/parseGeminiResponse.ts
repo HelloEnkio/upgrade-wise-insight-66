@@ -1,4 +1,5 @@
 import { jsonrepair } from 'jsonrepair';
+import { GeminiParseError, GeminiTokenLimitError } from './geminiErrors';
 
 export function parseGeminiResponse(response: any): any {
   const parts = response?.candidates?.[0]?.content?.parts;
@@ -13,12 +14,16 @@ export function parseGeminiResponse(response: any): any {
   }
   if (!text) {
     console.error('Invalid Gemini response format:', JSON.stringify(response));
-    throw new Error('Invalid response format from Gemini');
+    throw new GeminiParseError('Invalid response format from Gemini');
   }
 
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) {
-    throw new Error('No JSON found in Gemini response');
+    const lower = text.toLowerCase();
+    if (lower.includes('token') && lower.includes('limit')) {
+      throw new GeminiTokenLimitError('Response truncated due to token limit');
+    }
+    throw new GeminiParseError('No JSON found in Gemini response');
   }
 
   const jsonString = jsonMatch[0];
@@ -30,7 +35,7 @@ export function parseGeminiResponse(response: any): any {
       return JSON.parse(repaired);
     } catch (error) {
       console.error('Error repairing Gemini JSON:', error);
-      throw new Error('Erreur lors du traitement de la réponse IA');
+      throw new GeminiParseError('Erreur lors du traitement de la réponse IA');
     }
   }
 }
