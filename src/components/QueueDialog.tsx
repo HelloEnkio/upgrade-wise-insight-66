@@ -12,11 +12,15 @@ interface QueueDialogProps {
 
 const PongGame = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRectRef = useRef<DOMRect | null>(null);
   const [score, setScore] = useState(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    // Cache canvas bounds once to avoid layout thrashing
+    canvasRectRef.current = canvas.getBoundingClientRect();
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -73,7 +77,8 @@ const PongGame = () => {
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
+      const rect = canvasRectRef.current;
+      if (!rect) return;
       paddle.x = e.clientX - rect.left - paddle.width / 2;
     };
 
