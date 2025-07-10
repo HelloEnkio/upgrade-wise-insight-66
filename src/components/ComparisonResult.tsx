@@ -14,12 +14,14 @@ import { CheckCircle, XCircle, AlertTriangle, ShoppingCart } from 'lucide-react'
 import TechnicalView from './TechnicalView';
 import MultiCompareButton from './MultiCompareButton';
 import MultiCompare from './MultiCompare';
+import { extractReasonCategory } from '@/utils/reasons';
 
 interface ComparisonData {
   currentDevice: string;
   newDevice: string;
   recommendation: 'upgrade' | 'keep' | 'maybe';
   score: number;
+  reasons?: string[];
   takeHome: string;
   connoisseurSpecs: {
     category: string;
@@ -185,12 +187,36 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
             specs={data.connoisseurSpecs}
           />
         ) : (
-          <Card className="bg-white/80 backdrop-blur-sm border border-tech-gray-200 shadow-soft">
-            <CardContent className="p-8">
-              <h3 className="text-xl font-bold text-tech-dark mb-6">Take Home Summary</h3>
-              <p className="text-tech-gray-700 whitespace-pre-line">{data.takeHome}</p>
-            </CardContent>
-          </Card>
+          <>
+            <Card className="bg-white/80 backdrop-blur-sm border border-tech-gray-200 shadow-soft">
+              <CardContent className="p-8">
+                <h3 className="text-xl font-bold text-tech-dark mb-6">Take Home Summary</h3>
+                <p className="text-tech-gray-700 whitespace-pre-line">{data.takeHome}</p>
+              </CardContent>
+            </Card>
+            {data.reasons && data.reasons.length > 0 && (
+              <Card className="bg-white/80 backdrop-blur-sm border border-tech-gray-200 shadow-soft">
+                <CardContent className="p-8">
+                  <h3 className="text-xl font-bold text-tech-dark mb-6">Key Reasons</h3>
+                  <Table>
+                    <TableBody>
+                      {data.reasons.map((reason, index) => {
+                        const { title, description } = extractReasonCategory(reason);
+                        return (
+                          <TableRow key={index}>
+                            <TableHead scope="row" className="w-40 font-semibold text-tech-dark">
+                              {title || `Reason ${index + 1}`}
+                            </TableHead>
+                            <TableCell className="text-tech-gray-700">{description}</TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            )}
+          </>
         )}
 
         {/* Bouton pour recommencer */}
