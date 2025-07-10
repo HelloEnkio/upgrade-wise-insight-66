@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table';
 import { CheckCircle, XCircle, AlertTriangle, ShoppingCart } from 'lucide-react';
 import TechnicalView from './TechnicalView';
 import MultiCompareButton from './MultiCompareButton';
@@ -188,48 +196,63 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
             <Card className="bg-white/80 backdrop-blur-sm border-tech-gray-200 shadow-card">
               <CardContent className="p-8">
                 <h3 className="text-xl font-bold text-tech-dark mb-6">Technical Comparison</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-tech-gray-100 rounded-xl font-semibold text-tech-dark text-sm">
-                    <div className="flex-1">Component</div>
-                    <div className="flex-1 text-center">{data.currentDevice}</div>
-                    <div className="w-16 text-center">Impact</div>
-                    <div className="flex-1 text-center">{data.newDevice}</div>
-                    <div className="w-24 text-center">Why Better?</div>
-                  </div>
-                  {data.specs.map((spec, index) => (
-                    <div key={index} className="bg-tech-gray-50 rounded-xl">
-                      <div className="flex items-center justify-between p-4">
-                        <div className="flex-1">
-                          <span className="font-semibold text-tech-dark">{spec.category}</span>
-                        </div>
-                        <div className="flex-1 text-center">
-                          <span className="text-tech-gray-600">{spec.current}</span>
-                        </div>
-                        <div className="flex items-center justify-center w-16">
-                          {getImprovementIcon(spec.improvement)}
-                        </div>
-                        <div className="flex-1 text-center">
-                          <span className="text-tech-dark font-semibold">{spec.new}</span>
-                        </div>
-                        <div className="w-24 text-center">
-                          <span className="text-xs text-tech-gray-600 font-medium">
-                            {getBriefExplanation(spec.category, spec.improvement)}
-                          </span>
-                        </div>
-                      </div>
-                      {data.reasons[index] && (
-                        <div className="border-t border-tech-gray-200 px-4 pt-2 pb-4 text-tech-gray-700 text-sm">
-                          {data.reasons[index]}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-
-                  {data.reasons.slice(data.specs.length).map((reason, index) => (
-                    <div key={`extra-${index}`} className="p-4 bg-tech-gray-50 rounded-xl text-tech-gray-700 text-sm">
-                      {reason}
-                    </div>
-                  ))}
+                <div className="overflow-x-auto">
+                  <Table className="space-y-4">
+                    <TableHeader>
+                      <TableRow className="bg-tech-gray-100 rounded-xl font-semibold text-tech-dark text-sm">
+                        <TableHead scope="col" className="px-4 py-3">Component</TableHead>
+                        <TableHead scope="col" className="px-4 py-3 text-center">{data.currentDevice}</TableHead>
+                        <TableHead scope="col" className="px-4 py-3 text-center">Impact</TableHead>
+                        <TableHead scope="col" className="px-4 py-3 text-center">{data.newDevice}</TableHead>
+                        <TableHead scope="col" className="px-4 py-3 text-center">Why Better?</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody className="space-y-4">
+                      {data.specs.map((spec, index) => (
+                        <React.Fragment key={index}>
+                          <TableRow className="bg-tech-gray-50 rounded-xl">
+                            <TableCell className="px-4 py-4 font-semibold text-tech-dark">
+                              {spec.category}
+                            </TableCell>
+                            <TableCell className="px-4 py-4 text-center text-tech-gray-600">
+                              {spec.current}
+                            </TableCell>
+                            <TableCell className="px-4 py-4 text-center">
+                              {getImprovementIcon(spec.improvement)}
+                            </TableCell>
+                            <TableCell className="px-4 py-4 text-center font-semibold text-tech-dark">
+                              {spec.new}
+                            </TableCell>
+                            <TableCell className="px-4 py-4 text-center">
+                              <span className="text-xs text-tech-gray-600 font-medium">
+                                {getBriefExplanation(spec.category, spec.improvement)}
+                              </span>
+                            </TableCell>
+                          </TableRow>
+                          {data.reasons[index] && (
+                            <TableRow>
+                              <TableCell
+                                colSpan={5}
+                                className="border-t border-tech-gray-200 px-4 pt-2 pb-4 text-tech-gray-700 text-sm"
+                              >
+                                {data.reasons[index]}
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </React.Fragment>
+                      ))}
+                      {data.reasons.slice(data.specs.length).map((reason, index) => (
+                        <TableRow key={`extra-${index}`}>
+                          <TableCell
+                            colSpan={5}
+                            className="p-4 bg-tech-gray-50 rounded-xl text-tech-gray-700 text-sm"
+                          >
+                            {reason}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </div>
               </CardContent>
             </Card>
