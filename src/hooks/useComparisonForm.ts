@@ -4,6 +4,7 @@ import { logDevError } from '@/lib/devLogger';
 import { geminiService } from '@/services/geminiService';
 import { useToast } from '@/hooks/use-toast';
 import { GeminiParseError, GeminiTokenLimitError } from '@/utils/geminiErrors';
+import { needsPreciseSpecs } from '@/utils/specCheck';
 
 interface ModelOption {
   id: string;
@@ -87,12 +88,6 @@ export const useComparisonForm = () => {
       return;
     }
 
-    if (currentProduct.toLowerCase() === 'precise' || newProduct.toLowerCase() === 'precise') {
-      console.log('Opening precise specs dialog');
-      setPreciseDevice(currentProduct.toLowerCase() === 'precise' ? currentProduct : newProduct);
-      setShowPreciseSpecs(true);
-      return;
-    }
     
     if (currentProduct.trim() && newProduct.trim()) {
       console.log('Comparing:', currentProduct, 'vs', newProduct);
@@ -122,6 +117,11 @@ export const useComparisonForm = () => {
       // Proceed directly to comparison
       try {
         const result = await simulateAnalysis(currentProduct, newProduct);
+        if (!('isIncompatible' in result) && needsPreciseSpecs(result)) {
+          setPreciseDevice(currentProduct);
+          setShowPreciseSpecs(true);
+          return;
+        }
         setComparisonResult(result);
       } catch (error) {
         console.error('Comparison failed:', error);
@@ -162,6 +162,11 @@ export const useComparisonForm = () => {
         preciseDevice === currentProduct ? detailedDevice : otherDevice,
         preciseDevice === currentProduct ? otherDevice : detailedDevice
       );
+      if (!('isIncompatible' in result) && needsPreciseSpecs(result)) {
+        setPreciseDevice(preciseDevice);
+        setShowPreciseSpecs(true);
+        return;
+      }
       setComparisonResult(result);
     } catch (error) {
       console.error('Precise analysis failed:', error);
