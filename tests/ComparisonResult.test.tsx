@@ -35,4 +35,13 @@ describe('ComparisonResult', () => {
     await userEvent.click(screen.getByRole('switch'));
     expect(screen.queryByText('Detailed Technical Analysis')).toBeNull();
   });
+
+  it('renders comparison table headers with device names', () => {
+    render(<ComparisonResult data={mockData} onReset={() => {}} />);
+    expect(screen.getByRole('columnheader', { name: /component/i })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: /device a/i })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: /impact/i })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: /device b/i })).toBeInTheDocument();
+    expect(screen.getByRole('columnheader', { name: /why better/i })).toBeInTheDocument();
+  });
 });
