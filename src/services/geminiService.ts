@@ -1,6 +1,7 @@
 
 import { sanitizeInput } from '@/utils/sanitize';
 import { parseGeminiResponse } from '@/utils/parseGeminiResponse';
+import { GeminiParseError, GeminiTokenLimitError } from '@/utils/geminiErrors';
 
 interface GeminiRequest {
   currentDevice: string;
@@ -167,7 +168,10 @@ Focus on performance, features, value, and user experience. Be objective and hel
       return parseGeminiResponse(response);
     } catch (error) {
       console.error('Failed to parse Gemini response', { prompt, response });
-      throw error;
+      if (error instanceof GeminiParseError || error instanceof GeminiTokenLimitError) {
+        throw error;
+      }
+      throw new GeminiParseError('Unexpected Gemini response');
     }
   }
 
@@ -189,7 +193,10 @@ Be accurate and comprehensive.`;
       return parseGeminiResponse(response);
     } catch (error) {
       console.error('Failed to parse Gemini response', { prompt, response });
-      throw error;
+      if (error instanceof GeminiParseError || error instanceof GeminiTokenLimitError) {
+        throw error;
+      }
+      throw new GeminiParseError('Unexpected Gemini response');
     }
   }
 
@@ -219,7 +226,10 @@ Only provide valid JSON.`;
       return parseGeminiResponse(response);
     } catch (error) {
       console.error('Failed to parse Gemini response', { prompt, response });
-      throw error;
+      if (error instanceof GeminiParseError || error instanceof GeminiTokenLimitError) {
+        throw error;
+      }
+      throw new GeminiParseError('Unexpected Gemini response');
     }
   }
 
