@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Clock, Users, Crown, CreditCard, Gamepad2 } from 'lucide-react';
@@ -119,13 +119,16 @@ const QueueDialog = ({ isOpen, onClose }: QueueDialogProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg" aria-describedby="queue-desc">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <Users className="h-5 w-5 text-orange-500" />
             <span>Queue Active</span>
           </DialogTitle>
         </DialogHeader>
+        <DialogDescription id="queue-desc">
+          Displays your current queue position and wait options.
+        </DialogDescription>
         
         <div className="space-y-6">
           <div className="text-center">
