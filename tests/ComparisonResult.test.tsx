@@ -10,6 +10,7 @@ const mockData = {
   newDevice: 'Device B',
   recommendation: 'upgrade' as const,
   score: 90,
+  reasons: ['**Performance:** Faster', '**Battery:** Lasts longer'],
   takeHome: 'Better performance overall',
   connoisseurSpecs: [
     {
@@ -36,5 +37,13 @@ describe('ComparisonResult', () => {
   it('renders summary in default view', () => {
     render(<ComparisonResult data={mockData} onReset={() => {}} />);
     expect(screen.getByText(/Better performance overall/i)).toBeInTheDocument();
+  });
+
+  it('parses reason titles and descriptions', () => {
+    render(<ComparisonResult data={mockData} onReset={() => {}} />);
+    expect(screen.getByRole('rowheader', { name: /Performance/i })).toBeInTheDocument();
+    expect(screen.getByText('Faster')).toBeInTheDocument();
+    expect(screen.getByRole('rowheader', { name: /Battery/i })).toBeInTheDocument();
+    expect(screen.getByText('Lasts longer')).toBeInTheDocument();
   });
 });
