@@ -66,6 +66,7 @@ export const useComparisonForm = () => {
   const [showPreciseSpecs, setShowPreciseSpecs] = useState(false);
   const [notFoundProduct, setNotFoundProduct] = useState('');
   const [preciseDevice, setPreciseDevice] = useState('');
+  const [pendingComparison, setPendingComparison] = useState<ComparisonData | null>(null);
 
   const { toast } = useToast();
   
@@ -118,6 +119,7 @@ export const useComparisonForm = () => {
       try {
         const result = await simulateAnalysis(currentProduct, newProduct);
         if (!('isIncompatible' in result) && needsPreciseSpecs(result)) {
+          setPendingComparison(result);
           setPreciseDevice(currentProduct);
           setShowPreciseSpecs(true);
           return;
@@ -149,24 +151,29 @@ export const useComparisonForm = () => {
     }
   };
 
-  const handlePreciseSpecsSubmit = async (specs: any) => {
+  const handlePreciseSpecsSubmit = async (specs: any[]) => {
     console.log('Precise specs submitted:', specs);
-    
-    // Create a detailed device description from specs
-    const detailedDevice = `Custom Device (${specs.processor}, ${specs.ram}, ${specs.storage})`;
-    const otherDevice = preciseDevice === currentProduct ? newProduct : currentProduct;
+
+    const [currentSpecs, newSpecs] = specs;
+    const detailedCurrent = currentSpecs
+      ? `Custom Device (${currentSpecs.processor}, ${currentSpecs.ram}, ${currentSpecs.storage})`
+      : currentProduct;
+    const detailedNew = newSpecs
+      ? `Custom Device (${newSpecs.processor}, ${newSpecs.ram}, ${newSpecs.storage})`
+      : newProduct;
     
     // Simulate analysis with precise specs
     try {
       const result = await simulateAnalysis(
-        preciseDevice === currentProduct ? detailedDevice : otherDevice,
-        preciseDevice === currentProduct ? otherDevice : detailedDevice
+        detailedCurrent,
+        detailedNew
       );
       if (!('isIncompatible' in result) && needsPreciseSpecs(result)) {
         setPreciseDevice(preciseDevice);
         setShowPreciseSpecs(true);
         return;
       }
+      setPendingComparison(null);
       setComparisonResult(result);
     } catch (error) {
       console.error('Precise analysis failed:', error);
@@ -191,6 +198,14 @@ export const useComparisonForm = () => {
         });
       }
     }
+  };
+
+  const handleSkipPreciseSpecs = () => {
+    if (pendingComparison) {
+      setComparisonResult(pendingComparison);
+      setPendingComparison(null);
+    }
+    setShowPreciseSpecs(false);
   };
 
   const handleCurrentModelSelect = (model: ModelOption) => {
@@ -315,6 +330,7 @@ export const useComparisonForm = () => {
     // Handlers
     handleSubmit,
     handlePreciseSpecsSubmit,
+    handleSkipPreciseSpecs,
     handleCurrentModelSelect,
     handleNewModelSelect,
     resetForm

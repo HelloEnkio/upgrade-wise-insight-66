@@ -13,6 +13,8 @@ interface ComparisonDialogsProps {
   showPreciseSpecs: boolean;
   setShowPreciseSpecs: (show: boolean) => void;
   onPreciseSpecsSubmit: (specs: any) => void;
+  onSkipPreciseSpecs: () => void;
+  isPaidUser?: boolean;
 }
 
 const ComparisonDialogs = ({
@@ -23,7 +25,9 @@ const ComparisonDialogs = ({
   setShowQueue,
   showPreciseSpecs,
   setShowPreciseSpecs,
-  onPreciseSpecsSubmit
+  onPreciseSpecsSubmit,
+  onSkipPreciseSpecs,
+  isPaidUser
 }: ComparisonDialogsProps) => {
   return (
     <>
@@ -42,6 +46,8 @@ const ComparisonDialogs = ({
         isOpen={showPreciseSpecs}
         onClose={() => setShowPreciseSpecs(false)}
         onSubmit={onPreciseSpecsSubmit}
+        onSkip={onSkipPreciseSpecs}
+        isPaidUser={isPaidUser}
       />
     </>
   );

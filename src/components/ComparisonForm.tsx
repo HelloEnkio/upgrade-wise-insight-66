@@ -32,6 +32,7 @@ const ComparisonForm = () => {
     setShowPreciseSpecs,
     handleSubmit,
     handlePreciseSpecsSubmit,
+    handleSkipPreciseSpecs,
     handleCurrentModelSelect,
     handleNewModelSelect,
     resetForm
@@ -115,6 +116,8 @@ const ComparisonForm = () => {
         showPreciseSpecs={showPreciseSpecs}
         setShowPreciseSpecs={setShowPreciseSpecs}
         onPreciseSpecsSubmit={handlePreciseSpecsSubmit}
+        onSkipPreciseSpecs={handleSkipPreciseSpecs}
+        isPaidUser={false}
       />
     </>
   );
