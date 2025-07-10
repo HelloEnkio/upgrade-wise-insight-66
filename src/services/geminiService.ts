@@ -150,19 +150,18 @@ class GeminiServiceClass {
   async getProductComparison(currentDevice: string, newDevice: string): Promise<any> {
     const safeCurrent = sanitizeInput(currentDevice);
     const safeNew = sanitizeInput(newDevice);
-    const prompt = `Compare these two devices and provide a detailed analysis:
+    const prompt = `Compare these two devices:
 
 Current device: ${safeCurrent}
 New device: ${safeNew}
 
-Please respond with a JSON object containing:
+Return a JSON object with:
 - recommendation: "upgrade" | "keep" | "maybe"
 - score: number (0-100)
-- reasons: array of strings explaining the recommendation
-- specs: array of comparison specs with category, current, new, and improvement
-- technicalSpecs: detailed technical comparison
+- takeHome: short summary of the key points
+- connoisseurSpecs: detailed technical comparison with category, current value, new value, improvement, score and details
 
-Focus on performance, features, value, and user experience. Be objective and helpful.`;
+Focus on performance, features, value and user experience. Only output valid JSON.`;
 
     const response = await this.callGeminiAPI(prompt);
     try {

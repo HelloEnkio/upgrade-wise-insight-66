@@ -19,14 +19,8 @@ interface ComparisonData {
   newDevice: string;
   recommendation: 'upgrade' | 'keep' | 'maybe';
   score: number;
-  reasons: string[];
-  specs: {
-    category: string;
-    current: string;
-    new: string;
-    improvement: 'better' | 'worse' | 'same';
-  }[];
-  technicalSpecs: {
+  takeHome: string;
+  connoisseurSpecs: {
     category: string;
     subcategory?: string;
     current: {
