@@ -25,12 +25,15 @@ const PongGame = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const canvasWidth = canvas.width;
+    const canvasHeight = canvas.height;
+
     let animationId: number;
     let ball = { x: 200, y: 150, dx: 2, dy: 2, radius: 5 };
     const paddle = { x: 175, y: 250, width: 50, height: 10 };
 
     const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
       
       // Ball
       ctx.beginPath();
@@ -47,7 +50,7 @@ const PongGame = () => {
       ball.y += ball.dy;
       
       // Ball collision with walls
-      if (ball.x <= ball.radius || ball.x >= canvas.width - ball.radius) {
+      if (ball.x <= ball.radius || ball.x >= canvasWidth - ball.radius) {
         ball.dx = -ball.dx;
       }
       if (ball.y <= ball.radius) {
@@ -68,7 +71,7 @@ const PongGame = () => {
       }
       
       // Ball out of bounds
-      if (ball.y > canvas.height) {
+      if (ball.y > canvasHeight) {
         ball = { x: 200, y: 150, dx: 2, dy: 2, radius: 5 };
         setScore(0);
       }
