@@ -52,11 +52,22 @@ const TechnicalView = ({ currentDevice, newDevice, specs }: TechnicalViewProps) 
     return 'text-red-600 font-semibold';
   };
 
+  if (!specs || specs.length === 0) {
+    return (
+      <Card className="bg-white/80 backdrop-blur-sm border-tech-gray-200 shadow-card">
+        <CardContent className="p-8">
+          <h3 className="text-xl font-bold text-tech-dark mb-6">Detailed Technical Analysis</h3>
+          <p className="text-tech-gray-600 text-sm">No technical data available</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="bg-white/80 backdrop-blur-sm border-tech-gray-200 shadow-card">
       <CardContent className="p-8">
         <h3 className="text-xl font-bold text-tech-dark mb-6">Detailed Technical Analysis</h3>
-        
+
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
