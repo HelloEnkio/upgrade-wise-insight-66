@@ -197,42 +197,40 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
                     <div className="w-24 text-center">Why Better?</div>
                   </div>
                   {data.specs.map((spec, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 bg-tech-gray-50 rounded-xl">
-                      <div className="flex-1">
-                        <span className="font-semibold text-tech-dark">{spec.category}</span>
+                    <div key={index} className="bg-tech-gray-50 rounded-xl">
+                      <div className="flex items-center justify-between p-4">
+                        <div className="flex-1">
+                          <span className="font-semibold text-tech-dark">{spec.category}</span>
+                        </div>
+                        <div className="flex-1 text-center">
+                          <span className="text-tech-gray-600">{spec.current}</span>
+                        </div>
+                        <div className="flex items-center justify-center w-16">
+                          {getImprovementIcon(spec.improvement)}
+                        </div>
+                        <div className="flex-1 text-center">
+                          <span className="text-tech-dark font-semibold">{spec.new}</span>
+                        </div>
+                        <div className="w-24 text-center">
+                          <span className="text-xs text-tech-gray-600 font-medium">
+                            {getBriefExplanation(spec.category, spec.improvement)}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex-1 text-center">
-                        <span className="text-tech-gray-600">{spec.current}</span>
-                      </div>
-                      <div className="flex items-center justify-center w-16">
-                        {getImprovementIcon(spec.improvement)}
-                      </div>
-                      <div className="flex-1 text-center">
-                        <span className="text-tech-dark font-semibold">{spec.new}</span>
-                      </div>
-                      <div className="w-24 text-center">
-                        <span className="text-xs text-tech-gray-600 font-medium">
-                          {getBriefExplanation(spec.category, spec.improvement)}
-                        </span>
-                      </div>
+                      {data.reasons[index] && (
+                        <div className="border-t border-tech-gray-200 px-4 pt-2 pb-4 text-tech-gray-700 text-sm">
+                          {data.reasons[index]}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  {data.reasons.slice(data.specs.length).map((reason, index) => (
+                    <div key={`extra-${index}`} className="p-4 bg-tech-gray-50 rounded-xl text-tech-gray-700 text-sm">
+                      {reason}
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Raisons de la recommandation */}
-            <Card className="bg-white/80 backdrop-blur-sm border-tech-gray-200 shadow-card">
-              <CardContent className="p-8">
-                <h3 className="text-xl font-bold text-tech-dark mb-6">Why this recommendation?</h3>
-                <ul className="space-y-3">
-                  {data.reasons.map((reason, index) => (
-                    <li key={index} className="flex items-start space-x-3">
-                      <div className="w-2 h-2 bg-tech-electric rounded-full mt-2 flex-shrink-0"></div>
-                      <span className="text-tech-gray-700">{reason}</span>
-                    </li>
-                  ))}
-                </ul>
               </CardContent>
             </Card>
           </>
