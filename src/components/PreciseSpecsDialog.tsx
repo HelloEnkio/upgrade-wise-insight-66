@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -44,13 +44,19 @@ const PreciseSpecsDialog = ({ isOpen, onClose, onSubmit }: PreciseSpecsDialogPro
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg max-h-[80vh] overflow-y-auto">
+      <DialogContent
+        className="sm:max-w-lg max-h-[80vh] overflow-y-auto"
+        aria-describedby="precise-specs-desc"
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <Settings className="h-5 w-5 text-blue-500" />
             <span>Specify Precise Specifications</span>
           </DialogTitle>
         </DialogHeader>
+        <DialogDescription id="precise-specs-desc">
+          Provide detailed hardware specifications for a more accurate comparison.
+        </DialogDescription>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">

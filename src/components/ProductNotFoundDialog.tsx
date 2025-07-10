@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Search, Lightbulb } from 'lucide-react';
 
@@ -21,14 +21,17 @@ const ProductNotFoundDialog = ({ isOpen, onClose, searchTerm }: ProductNotFoundD
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md" aria-describedby="product-not-found-desc">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <Search className="h-5 w-5 text-red-500" />
             <span>Product Not Found</span>
           </DialogTitle>
         </DialogHeader>
-        
+        <DialogDescription id="product-not-found-desc">
+          This dialog shows search tips when no matching product is found.
+        </DialogDescription>
+
         <div className="space-y-4">
           <p className="text-sm text-gray-600">
             We couldn't find "<span className="font-semibold">{searchTerm}</span>" in our database.
