@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Search, Loader2 } from 'lucide-react';
+import SnakeGame from '@/components/SnakeGame';
 
 interface ComparisonFormInputsProps {
   currentProduct: string;
@@ -101,6 +102,14 @@ const ComparisonFormInputs = ({
               )}
             </Button>
           </form>
+          {isLoading && (
+            <div className="mt-6 space-y-4 text-center">
+              <p className="text-sm text-tech-gray-500">
+                Interrogating the AI, this might take a moment… Enjoy a little game in the meantime?
+              </p>
+              <SnakeGame active={isLoading} />
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
