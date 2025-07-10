@@ -167,6 +167,14 @@ Focus on performance, features, value, and user experience. Be objective and hel
       return parseGeminiResponse(response);
     } catch (error) {
       console.error('Failed to parse Gemini response', { prompt, response });
+      if (
+        error instanceof Error &&
+        error.message.includes('Gemini response truncated due to token limit')
+      ) {
+        throw new Error(
+          'The AI response was too long and got cut off. Please try again with a shorter request.'
+        );
+      }
       throw error;
     }
   }
@@ -189,6 +197,14 @@ Be accurate and comprehensive.`;
       return parseGeminiResponse(response);
     } catch (error) {
       console.error('Failed to parse Gemini response', { prompt, response });
+      if (
+        error instanceof Error &&
+        error.message.includes('Gemini response truncated due to token limit')
+      ) {
+        throw new Error(
+          'The AI response was too long and got cut off. Please try again with a shorter request.'
+        );
+      }
       throw error;
     }
   }
@@ -219,6 +235,14 @@ Only provide valid JSON.`;
       return parseGeminiResponse(response);
     } catch (error) {
       console.error('Failed to parse Gemini response', { prompt, response });
+      if (
+        error instanceof Error &&
+        error.message.includes('Gemini response truncated due to token limit')
+      ) {
+        throw new Error(
+          'The AI response was too long and got cut off. Please try again with a shorter request.'
+        );
+      }
       throw error;
     }
   }

@@ -31,4 +31,15 @@ describe('parseGeminiResponse', () => {
     const result = parseGeminiResponse(response);
     expect(result).toEqual({ ok: true });
   });
+
+  it('throws when finish reason is MAX_TOKENS', () => {
+    const response = {
+      candidates: [
+        { finishReason: 'MAX_TOKENS', content: { parts: [{ text: '{"a":1}' }] } }
+      ]
+    } as any;
+    expect(() => parseGeminiResponse(response)).toThrow(
+      'Gemini response truncated due to token limit'
+    );
+  });
 });
