@@ -129,7 +129,7 @@ class GeminiServiceClass {
           topK: 40,
           topP: 0.95,
           // Limit output length to keep responses concise
-          maxOutputTokens: 1024,
+          maxOutputTokens: 4096,
         }
       })
     });

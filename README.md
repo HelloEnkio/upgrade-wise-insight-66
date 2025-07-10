@@ -84,4 +84,4 @@ cp .env.example .env
 ```
 
 The application uses the free Gemini 2.5 Flash model with a daily limit of 500 requests. The code enforces a safety threshold of 490 requests per day to avoid hitting the quota.
-Responses are limited to 1024 tokens to encourage concise answers and reduce quota usage.
+Responses are limited to 4096 tokens to encourage concise answers and reduce quota usage.
