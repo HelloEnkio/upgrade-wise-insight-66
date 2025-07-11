@@ -39,6 +39,21 @@ describe('ComparisonResult', () => {
     expect(screen.getByText(/Better performance overall/i)).toBeInTheDocument();
   });
 
+  it('renders spec table by default and hides it when toggled', async () => {
+    render(<ComparisonResult data={mockData} onReset={() => {}} />);
+    expect(screen.getByRole('rowheader', { name: /CPU/i })).toBeInTheDocument();
+    expect(screen.getByText('A1')).toBeInTheDocument();
+    expect(screen.getByText('B1')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('switch'));
+    expect(
+      screen.queryByRole('heading', { name: /Quick Spec Comparison/i })
+    ).toBeNull();
+    await userEvent.click(screen.getByRole('switch'));
+    expect(
+      screen.getByRole('heading', { name: /Quick Spec Comparison/i })
+    ).toBeInTheDocument();
+  });
+
   it('parses reason titles and descriptions', () => {
     render(<ComparisonResult data={mockData} onReset={() => {}} />);
     expect(screen.getByRole('rowheader', { name: /Performance/i })).toBeInTheDocument();

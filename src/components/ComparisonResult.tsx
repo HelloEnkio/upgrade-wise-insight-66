@@ -194,6 +194,46 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
                 <p className="text-tech-gray-700 whitespace-pre-line">{data.takeHome}</p>
               </CardContent>
             </Card>
+            {data.connoisseurSpecs && data.connoisseurSpecs.length > 0 && (
+              <Card className="bg-white/80 backdrop-blur-sm border border-tech-gray-200 shadow-soft">
+                <CardContent className="p-8">
+                  <h3 className="text-xl font-bold text-tech-dark mb-6">Quick Spec Comparison</h3>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="font-bold text-tech-dark">Component</TableHead>
+                        <TableHead className="font-bold text-tech-dark text-center">{data.currentDevice}</TableHead>
+                        <TableHead className="font-bold text-tech-dark text-center">Impact</TableHead>
+                        <TableHead className="font-bold text-tech-dark text-center">{data.newDevice}</TableHead>
+                        <TableHead className="font-bold text-tech-dark text-center">Why Better?</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {data.connoisseurSpecs.map((spec, index) => (
+                        <TableRow key={index} className="hover:bg-tech-gray-50/50">
+                          <TableHead scope="row" className="font-semibold text-tech-dark">
+                            <div>
+                              {spec.category}
+                              {spec.subcategory && (
+                                <div className="text-sm text-tech-gray-600 font-normal">{spec.subcategory}</div>
+                              )}
+                            </div>
+                          </TableHead>
+                          <TableCell className="text-center text-tech-gray-700">{spec.current.value}</TableCell>
+                          <TableCell className="text-center">{getImprovementIcon(spec.improvement)}</TableCell>
+                          <TableCell className="text-center font-semibold text-tech-dark">{spec.new.value}</TableCell>
+                          <TableCell className="text-center">
+                            <span className="text-xs text-tech-gray-600 font-medium">
+                              {getBriefExplanation(spec.category, spec.improvement)}
+                            </span>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            )}
             {data.reasons && data.reasons.length > 0 && (
               <Card className="bg-white/80 backdrop-blur-sm border border-tech-gray-200 shadow-soft">
                 <CardContent className="p-8">
