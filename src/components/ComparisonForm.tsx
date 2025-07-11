@@ -3,7 +3,6 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { geminiService } from '@/services/geminiService';
 import { useComparisonForm } from '@/hooks/useComparisonForm';
-import ModelSelector from './ModelSelector';
 import ComparisonResult from './ComparisonResult';
 import IncompatibleComparison from './IncompatibleComparison';
 import QueueStatus from './QueueStatus';
@@ -16,10 +15,6 @@ const ComparisonForm = () => {
     setCurrentProduct,
     newProduct,
     setNewProduct,
-    showCurrentSelector,
-    showNewSelector,
-    currentModels,
-    newModels,
     comparisonResult,
     showQueueStatus,
     showProductNotFound,
@@ -33,8 +28,6 @@ const ComparisonForm = () => {
     handleSubmit,
     handlePreciseSpecsSubmit,
     handleSkipPreciseSpecs,
-    handleCurrentModelSelect,
-    handleNewModelSelect,
     resetForm
   } = useComparisonForm();
 
@@ -71,29 +64,7 @@ const ComparisonForm = () => {
     return <ComparisonResult data={comparisonResult} onReset={resetForm} />;
   }
 
-  // Show model selector for current device
-  if (showCurrentSelector) {
-    return (
-      <ModelSelector
-        device={currentProduct}
-        models={currentModels}
-        onSelect={handleCurrentModelSelect}
-        onBack={() => resetForm()}
-      />
-    );
-  }
 
-  // Show model selector for new device
-  if (showNewSelector) {
-    return (
-      <ModelSelector
-        device={newProduct}
-        models={newModels}
-        onSelect={handleNewModelSelect}
-        onBack={() => resetForm()}
-      />
-    );
-  }
 
   // Main form
   return (

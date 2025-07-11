@@ -6,14 +6,6 @@ import { useToast } from '@/hooks/use-toast';
 import { GeminiParseError, GeminiTokenLimitError } from '@/utils/geminiErrors';
 import { needsPreciseSpecs } from '@/utils/specCheck';
 
-interface ModelOption {
-  id: string;
-  name: string;
-  year: string;
-  specs: string[];
-  price?: string;
-}
-
 interface ComparisonData {
   currentDevice: string;
   newDevice: string;
@@ -47,12 +39,6 @@ interface IncompatibleComparison {
 export const useComparisonForm = () => {
   const [currentProduct, setCurrentProduct] = useState('');
   const [newProduct, setNewProduct] = useState('');
-  const [showCurrentSelector, setShowCurrentSelector] = useState(false);
-  const [showNewSelector, setShowNewSelector] = useState(false);
-  const [currentModels, setCurrentModels] = useState<ModelOption[]>([]);
-  const [newModels, setNewModels] = useState<ModelOption[]>([]);
-  const [selectedCurrent, setSelectedCurrent] = useState<ModelOption | null>(null);
-  const [selectedNew, setSelectedNew] = useState<ModelOption | null>(null);
   const [comparisonResult, setComparisonResult] = useState<ComparisonData | IncompatibleComparison | null>(null);
   const [showQueueStatus, setShowQueueStatus] = useState(false);
   const [showProductNotFound, setShowProductNotFound] = useState(false);
@@ -64,7 +50,7 @@ export const useComparisonForm = () => {
 
   const { toast } = useToast();
   
-  const { isLoading, getModelOptions, simulateAnalysis } = useMockData();
+  const { isLoading, simulateAnalysis } = useMockData();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,21 +79,7 @@ export const useComparisonForm = () => {
         return;
       }
       
-      // Check if we need to ask for model details
-      const currentOptions = getModelOptions(currentProduct);
-      const newOptions = getModelOptions(newProduct);
-      
-      if (currentOptions && currentOptions.length > 1) {
-        setCurrentModels(currentOptions);
-        setShowCurrentSelector(true);
-        return;
-      }
-      
-      if (newOptions && newOptions.length > 1) {
-        setNewModels(newOptions);
-        setShowNewSelector(true);
-        return;
-      }
+
       
       // Proceed directly to comparison
       try {
@@ -202,92 +174,9 @@ export const useComparisonForm = () => {
     setShowPreciseSpecs(false);
   };
 
-  const handleCurrentModelSelect = (model: ModelOption) => {
-    setSelectedCurrent(model);
-    setCurrentProduct(model.name + ' ' + model.year);
-    setShowCurrentSelector(false);
-    
-    // Check now the new product
-    const newOptions = getModelOptions(newProduct);
-    if (newOptions && newOptions.length > 1) {
-      setNewModels(newOptions);
-      setShowNewSelector(true);
-    } else {
-      // Proceed to comparison
-      simulateAnalysis(model.name + ' ' + model.year, newProduct)
-        .then(result => setComparisonResult(result))
-        .catch(error => {
-          console.error('Comparison failed:', error);
-          logDevError('Comparison failed', error);
-          if (error instanceof GeminiTokenLimitError) {
-            toast({
-              title: 'Response Too Long',
-              description: 'The AI response exceeded the token limit.',
-              variant: 'destructive'
-            });
-          } else if (error instanceof GeminiParseError) {
-            toast({
-              title: 'AI Error',
-              description: 'The AI returned an unexpected response.',
-              variant: 'destructive'
-            });
-          } else {
-            toast({
-              title: 'Analysis Error',
-              description: 'Unable to analyze these products. Please try again later.',
-              variant: 'destructive'
-            });
-          }
-        });
-    }
-  };
-
-  const handleNewModelSelect = async (model: ModelOption) => {
-    setSelectedNew(model);
-    setNewProduct(model.name + ' ' + model.year);
-    setShowNewSelector(false);
-    
-    const currentDeviceName = selectedCurrent ? 
-      selectedCurrent.name + ' ' + selectedCurrent.year : 
-      currentProduct;
-    
-    try {
-      const result = await simulateAnalysis(currentDeviceName, model.name + ' ' + model.year);
-      setComparisonResult(result);
-    } catch (error) {
-      console.error('Comparison failed:', error);
-      logDevError('Comparison failed', error);
-      if (error instanceof GeminiTokenLimitError) {
-        toast({
-          title: 'Response Too Long',
-          description: 'The AI response exceeded the token limit.',
-          variant: 'destructive'
-        });
-      } else if (error instanceof GeminiParseError) {
-        toast({
-          title: 'AI Error',
-          description: 'The AI returned an unexpected response.',
-          variant: 'destructive'
-        });
-      } else {
-        toast({
-          title: 'Analysis Error',
-          description: 'Unable to analyze these products. Please try again later.',
-          variant: 'destructive'
-        });
-      }
-    }
-  };
-
   const resetForm = () => {
     setCurrentProduct('');
     setNewProduct('');
-    setShowCurrentSelector(false);
-    setShowNewSelector(false);
-    setCurrentModels([]);
-    setNewModels([]);
-    setSelectedCurrent(null);
-    setSelectedNew(null);
     setComparisonResult(null);
     setShowQueueStatus(false);
     setShowProductNotFound(false);
@@ -303,10 +192,6 @@ export const useComparisonForm = () => {
     setCurrentProduct,
     newProduct,
     setNewProduct,
-    showCurrentSelector,
-    showNewSelector,
-    currentModels,
-    newModels,
     comparisonResult,
     showQueueStatus,
     showProductNotFound,
@@ -325,8 +210,6 @@ export const useComparisonForm = () => {
     handleSubmit,
     handlePreciseSpecsSubmit,
     handleSkipPreciseSpecs,
-    handleCurrentModelSelect,
-    handleNewModelSelect,
     resetForm
   };
 };
