@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { mockModels, type ModelOption } from '@/data/mockModels';
 import { areProductsComparable, generateIncompatibleExplanation } from '@/utils/productCategories';
 import { queueService } from '@/services/queueService';
 import { cacheService } from '@/services/cacheService';
@@ -38,18 +37,8 @@ interface IncompatibleComparison {
 export const useMockData = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const getModelOptions = (device: string): ModelOption[] | undefined => {
-    const searchTerm = device.toLowerCase();
-    for (const key in mockModels) {
-      if (searchTerm.includes(key)) {
-        return mockModels[key];
-      }
-    }
-    return undefined;
-  };
-
   const simulateAnalysis = async (
-    currentDevice: string, 
+    currentDevice: string,
     newDevice: string
   ): Promise<ComparisonData | IncompatibleComparison> => {
     setIsLoading(true);
@@ -108,7 +97,6 @@ export const useMockData = () => {
 
   return {
     isLoading,
-    getModelOptions,
     simulateAnalysis
   };
 };
