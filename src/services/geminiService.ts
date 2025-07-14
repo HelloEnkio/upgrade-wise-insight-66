@@ -2,6 +2,7 @@
 import { sanitizeInput } from '@/utils/sanitize';
 import { parseGeminiResponse } from '@/utils/parseGeminiResponse';
 import { GeminiParseError, GeminiTokenLimitError } from '@/utils/geminiErrors';
+import { normalizeConnoisseurSpecs } from './specNormalizer';
 
 interface GeminiRequest {
   currentDevice: string;
@@ -165,7 +166,11 @@ Focus on performance, features, value and user experience. Only output valid JSO
 
     const response = await this.callGeminiAPI(prompt);
     try {
-      return parseGeminiResponse(response);
+      const result = parseGeminiResponse(response);
+      if (result && typeof result === 'object') {
+        result.connoisseurSpecs = normalizeConnoisseurSpecs(result.connoisseurSpecs);
+      }
+      return result;
     } catch (error) {
       console.error('Failed to parse Gemini response', { prompt, response });
       if (error instanceof GeminiParseError || error instanceof GeminiTokenLimitError) {

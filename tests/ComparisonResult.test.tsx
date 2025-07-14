@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import ComparisonResult from '../src/components/ComparisonResult';
+import { normalizeConnoisseurSpecs } from '../src/services/specNormalizer';
 
 const mockData = {
   currentDevice: 'Device A',
@@ -15,8 +16,10 @@ const mockData = {
   connoisseurSpecs: [
     {
       category: 'CPU',
-      current: { value: 'A1', technical: 'specA' },
-      new: { value: 'B1', technical: 'specB' },
+      currentValue: 'A1',
+      currentTechnical: 'specA',
+      newValue: 'B1',
+      newTechnical: 'specB',
       improvement: 'better' as const,
       score: 95,
       details: 'Faster'
@@ -24,9 +27,14 @@ const mockData = {
   ]
 };
 
+const normalizedData = {
+  ...mockData,
+  connoisseurSpecs: normalizeConnoisseurSpecs(mockData.connoisseurSpecs)
+};
+
 describe('ComparisonResult', () => {
   it('shows TechnicalView when switch is toggled', async () => {
-    render(<ComparisonResult data={mockData} onReset={() => {}} />);
+    render(<ComparisonResult data={normalizedData} onReset={() => {}} />);
     expect(screen.queryByText('Detailed Technical Analysis')).toBeNull();
     await userEvent.click(screen.getByRole('switch'));
     expect(screen.getByText('Detailed Technical Analysis')).toBeInTheDocument();
@@ -35,12 +43,12 @@ describe('ComparisonResult', () => {
   });
 
   it('renders summary in default view', () => {
-    render(<ComparisonResult data={mockData} onReset={() => {}} />);
+    render(<ComparisonResult data={normalizedData} onReset={() => {}} />);
     expect(screen.getByText(/Better performance overall/i)).toBeInTheDocument();
   });
 
   it('renders spec table by default and hides it when toggled', async () => {
-    render(<ComparisonResult data={mockData} onReset={() => {}} />);
+    render(<ComparisonResult data={normalizedData} onReset={() => {}} />);
     expect(screen.getByRole('rowheader', { name: /CPU/i })).toBeInTheDocument();
     expect(screen.getByText('A1')).toBeInTheDocument();
     expect(screen.getByText('B1')).toBeInTheDocument();
@@ -55,7 +63,7 @@ describe('ComparisonResult', () => {
   });
 
   it('parses reason titles and descriptions', () => {
-    render(<ComparisonResult data={mockData} onReset={() => {}} />);
+    render(<ComparisonResult data={normalizedData} onReset={() => {}} />);
     expect(screen.getByRole('rowheader', { name: /Performance/i })).toBeInTheDocument();
     expect(screen.getByText('Faster')).toBeInTheDocument();
     expect(screen.getByRole('rowheader', { name: /Battery/i })).toBeInTheDocument();
