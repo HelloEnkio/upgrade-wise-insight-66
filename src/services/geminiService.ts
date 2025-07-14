@@ -148,6 +148,26 @@ class GeminiServiceClass {
     return json;
   }
 
+  async checkComparability(
+    currentDevice: string,
+    newDevice: string
+  ): Promise<{ comparable: boolean; category1: string; category2: string }> {
+    const safeCurrent = sanitizeInput(currentDevice);
+    const safeNew = sanitizeInput(newDevice);
+    const prompt = `Determine if the following products are comparable.\n\n- ${safeCurrent}\n- ${safeNew}\n\nReturn a JSON object with:\n{ "comparable": boolean, "category1": string, "category2": string }\nOnly provide the JSON.`;
+
+    const response = await this.callGeminiAPI(prompt);
+    try {
+      return parseGeminiResponse(response);
+    } catch (error) {
+      console.error('Failed to parse Gemini response', { prompt, response });
+      if (error instanceof GeminiParseError || error instanceof GeminiTokenLimitError) {
+        throw error;
+      }
+      throw new GeminiParseError('Unexpected Gemini response');
+    }
+  }
+
   async getProductComparison(currentDevice: string, newDevice: string): Promise<any> {
     const safeCurrent = sanitizeInput(currentDevice);
     const safeNew = sanitizeInput(newDevice);

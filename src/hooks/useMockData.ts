@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { areProductsComparable, generateIncompatibleExplanation } from '@/utils/productCategories';
 import { queueService } from '@/services/queueService';
+import { geminiService } from '@/services/geminiService';
 import { cacheService } from '@/services/cacheService';
 import { logDevError } from '@/lib/devLogger';
 
@@ -44,13 +45,27 @@ export const useMockData = () => {
     setIsLoading(true);
     
     try {
-      // Check if products are comparable
+      // Basic local check
       if (!areProductsComparable(currentDevice, newDevice)) {
         return {
           isIncompatible: true,
           currentDevice,
           newDevice,
           explanation: generateIncompatibleExplanation(currentDevice, newDevice)
+        };
+      }
+
+      // Ask Gemini for a more precise validation
+      const compatibility = await geminiService.checkComparability(
+        currentDevice,
+        newDevice
+      );
+      if (!compatibility.comparable) {
+        return {
+          isIncompatible: true,
+          currentDevice,
+          newDevice,
+          explanation: `I cannot compare "${currentDevice}" and "${newDevice}" because they belong to different categories (${compatibility.category1} vs ${compatibility.category2}).`
         };
       }
 
