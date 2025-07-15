@@ -209,6 +209,9 @@ const MultiCompare = ({ onClose }: MultiCompareProps) => {
                 </>
               )}
             </Button>
+            <p className="mt-2 text-xs text-tech-gray-400 text-center">
+              AI can make mistakes. Please verify key informations before considering a purchase.
+            </p>
           </div>
         </CardContent>
       </Card>

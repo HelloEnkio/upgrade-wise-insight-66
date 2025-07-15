@@ -239,6 +239,9 @@ const PreciseSpecsDialog = ({
             </Button>
             <Button type="submit">Analyze with Precise Specs</Button>
           </div>
+          <p className="mt-2 text-xs text-tech-gray-400 text-center">
+            AI can make mistakes. Please verify key informations before considering a purchase.
+          </p>
         </form>
       </DialogContent>
     </Dialog>
