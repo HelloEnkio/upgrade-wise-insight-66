@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getProductCategory, areProductsComparable, generateIncompatibleExplanation } from './productCategories';
+import { getProductCategory, areProductsComparable, generateIncompatibleExplanation, normalizeCategory } from './productCategories';
 
 describe('getProductCategory', () => {
   it('detects electronics category', () => {
@@ -40,5 +40,15 @@ describe('generateIncompatibleExplanation', () => {
     expect(message).toContain('Toyota car');
     expect(message).toContain('electronics');
     expect(message).toContain('vehicles');
+  });
+});
+
+describe('normalizeCategory', () => {
+  it('maps plural categories to singular form', () => {
+    expect(normalizeCategory('vehicles')).toBe('vehicle');
+  });
+
+  it('keeps unknown categories unchanged', () => {
+    expect(normalizeCategory('lighting')).toBe('lighting');
   });
 });

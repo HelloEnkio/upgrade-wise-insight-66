@@ -48,6 +48,21 @@ describe('PreciseSpecsDialog', () => {
     expect(screen.getByLabelText(/Model Year/i)).toBeInTheDocument();
   });
 
+  it('renders vehicle spec fields when category is vehicles', () => {
+    render(
+      <PreciseSpecsDialog
+        isOpen={true}
+        onClose={() => {}}
+        onSubmit={() => {}}
+        onSkip={() => {}}
+        category="vehicles"
+      />
+    );
+
+    expect(screen.getByLabelText(/Fuel Type/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Model Year/i)).toBeInTheDocument();
+  });
+
   it('places the skip button before other actions', () => {
     render(
       <PreciseSpecsDialog

@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { normalizeCategory } from '@/utils/productCategories';
 import {
   Dialog,
   DialogContent,
@@ -106,7 +107,8 @@ interface PreciseSpecsDialogProps {
 type PreciseSpecs = Record<string, string>;
 
 const buildEmptySpecs = (category: string): PreciseSpecs => {
-  const fields = FIELD_SETS[category] || FIELD_SETS.computer;
+  const normalized = normalizeCategory(category);
+  const fields = FIELD_SETS[normalized] || FIELD_SETS.computer;
   return fields.reduce<PreciseSpecs>((acc, f) => {
     acc[f.key] = '';
     return acc;
@@ -122,7 +124,8 @@ const PreciseSpecsDialog = ({
   device,
   category = 'computer'
 }: PreciseSpecsDialogProps) => {
-  const emptySpecs = buildEmptySpecs(category);
+  const normalizedCategory = normalizeCategory(category);
+  const emptySpecs = buildEmptySpecs(normalizedCategory);
   const [specsList, setSpecsList] = useState<PreciseSpecs[]>([ { ...emptySpecs } ]);
 
   const addDevice = () => {
@@ -157,7 +160,7 @@ const PreciseSpecsDialog = ({
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <Settings className="h-5 w-5 text-blue-500" />
-            <span>Specify Precise Specifications</span>
+            <span>Precise Specifications</span>
           </DialogTitle>
         </DialogHeader>
         <DialogDescription id="precise-specs-desc">
@@ -174,10 +177,11 @@ const PreciseSpecsDialog = ({
             <Button
               type="button"
               variant="secondary"
+              size="lg"
               className="font-bold"
               onClick={onSkip}
             >
-              Whatever, just compare the most common configuration.
+              Whatever, just compare the most common specifications.
             </Button>
           </div>
           {specsList.map((specs, idx) => (
@@ -186,7 +190,7 @@ const PreciseSpecsDialog = ({
               className="space-y-4 border-b pb-4 last:border-none last:pb-0"
             >
               <h3 className="font-semibold">Device {idx + 1}</h3>
-              {FIELD_SETS[category]?.map((field) => (
+              {FIELD_SETS[normalizedCategory]?.map((field) => (
                 <div key={field.key} className="space-y-2">
                   <Label
                     htmlFor={`${field.key}-${idx}`}
