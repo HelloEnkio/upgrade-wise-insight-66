@@ -22,6 +22,7 @@ const ComparisonForm = () => {
     showPreciseSpecs,
     notFoundProduct,
     preciseDevice,
+    category,
     isLoading,
     setShowProductNotFound,
     setShowQueue,
@@ -91,6 +92,7 @@ const ComparisonForm = () => {
         onSkipPreciseSpecs={handleSkipPreciseSpecs}
         isPaidUser={false}
         preciseDevice={preciseDevice}
+        category={category}
       />
     </>
   );

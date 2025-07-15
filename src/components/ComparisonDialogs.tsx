@@ -16,6 +16,7 @@ interface ComparisonDialogsProps {
   onSkipPreciseSpecs: () => void;
   isPaidUser?: boolean;
   preciseDevice: string;
+  category: string;
 }
 
 const ComparisonDialogs = ({
@@ -29,7 +30,8 @@ const ComparisonDialogs = ({
   onPreciseSpecsSubmit,
   onSkipPreciseSpecs,
   isPaidUser,
-  preciseDevice
+  preciseDevice,
+  category
 }: ComparisonDialogsProps) => {
   return (
     <>
@@ -51,6 +53,7 @@ const ComparisonDialogs = ({
         onSkip={onSkipPreciseSpecs}
         isPaidUser={isPaidUser}
         device={preciseDevice}
+        category={category}
       />
     </>
   );

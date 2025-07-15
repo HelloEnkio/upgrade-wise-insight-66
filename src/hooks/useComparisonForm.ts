@@ -47,6 +47,7 @@ export const useComparisonForm = () => {
   const [notFoundProduct, setNotFoundProduct] = useState('');
   const [preciseDevice, setPreciseDevice] = useState('');
   const [pendingComparison, setPendingComparison] = useState<ComparisonData | null>(null);
+  const [category, setCategory] = useState<string>('computer');
 
   const { toast } = useToast();
   
@@ -87,6 +88,9 @@ export const useComparisonForm = () => {
           currentProduct,
           newProduct
         );
+        if (compatibility.category1 === compatibility.category2) {
+          setCategory(compatibility.category1);
+        }
 
         if (!compatibility.comparable) {
           setComparisonResult({
@@ -215,6 +219,7 @@ export const useComparisonForm = () => {
     setShowPreciseSpecs(false);
     setNotFoundProduct('');
     setPreciseDevice('');
+    setCategory('computer');
   };
 
   return {
@@ -230,6 +235,7 @@ export const useComparisonForm = () => {
     showPreciseSpecs,
     notFoundProduct,
     preciseDevice,
+    category,
     isLoading,
     
     // State setters
