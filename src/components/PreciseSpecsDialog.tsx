@@ -13,6 +13,7 @@ interface PreciseSpecsDialogProps {
   onSubmit: (specs: PreciseSpecs[]) => void;
   onSkip: () => void;
   isPaidUser?: boolean;
+  device?: string;
 }
 
 interface PreciseSpecs {
@@ -33,7 +34,7 @@ const emptySpecs: PreciseSpecs = {
   additionalSpecs: ''
 };
 
-const PreciseSpecsDialog = ({ isOpen, onClose, onSubmit, onSkip, isPaidUser = false }: PreciseSpecsDialogProps) => {
+const PreciseSpecsDialog = ({ isOpen, onClose, onSubmit, onSkip, isPaidUser = false, device }: PreciseSpecsDialogProps) => {
   const [specsList, setSpecsList] = useState<PreciseSpecs[]>([ { ...emptySpecs } ]);
 
   const addDevice = () => {
@@ -74,6 +75,11 @@ const PreciseSpecsDialog = ({ isOpen, onClose, onSubmit, onSkip, isPaidUser = fa
         <DialogDescription id="precise-specs-desc">
           Provide detailed hardware specifications for a more accurate comparison.
         </DialogDescription>
+        {device && (
+          <p className="text-sm text-gray-600 mt-2">
+            More details are needed for <span className="font-semibold">{device}</span>.
+          </p>
+        )}
         
         <form onSubmit={handleSubmit} className="space-y-6">
           {specsList.map((specs, idx) => (
