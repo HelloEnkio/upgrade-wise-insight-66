@@ -21,6 +21,7 @@ const ComparisonForm = () => {
     showQueue,
     showPreciseSpecs,
     notFoundProduct,
+    preciseDevice,
     isLoading,
     setShowProductNotFound,
     setShowQueue,
