@@ -18,6 +18,17 @@ export const getProductCategory = (product: string): string | null => {
   return null;
 };
 
+export const normalizeCategory = (category: string): string => {
+  switch (category) {
+    case 'vehicles':
+      return 'vehicle';
+    case 'electronics':
+      return 'computer';
+    default:
+      return category;
+  }
+};
+
 export const areProductsComparable = (product1: string, product2: string): boolean => {
   const category1 = getProductCategory(product1);
   const category2 = getProductCategory(product2);
