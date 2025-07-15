@@ -13,6 +13,7 @@ interface ComparisonFormInputsProps {
   newProduct: string;
   setNewProduct: (value: string) => void;
   isLoading: boolean;
+  isSubmitting?: boolean;
   onSubmit: (e: React.FormEvent) => void;
 }
 
@@ -22,8 +23,10 @@ const ComparisonFormInputs = ({
   newProduct,
   setNewProduct,
   isLoading,
+  isSubmitting = false,
   onSubmit
 }: ComparisonFormInputsProps) => {
+  const busy = isLoading || isSubmitting;
   return (
     <div className="w-full max-w-2xl mx-auto animate-slide-up space-y-6">
       {/* Free Service Indicator */}
@@ -52,7 +55,7 @@ const ComparisonFormInputs = ({
                 onChange={(e) => setCurrentProduct(e.target.value)}
                 className="h-14 text-lg bg-tech-gray-50/50 border-tech-gray-300 focus:border-tech-electric focus:ring-tech-electric/30 focus:shadow-neon transition-all duration-300 rounded-xl"
                 required
-                disabled={isLoading}
+                disabled={busy}
               />
             </div>
 
@@ -80,16 +83,16 @@ const ComparisonFormInputs = ({
                 onChange={(e) => setNewProduct(e.target.value)}
                 className="h-14 text-lg bg-tech-gray-50/50 border-tech-gray-300 focus:border-tech-electric focus:ring-tech-electric/30 focus:shadow-neon transition-all duration-300 rounded-xl"
                 required
-                disabled={isLoading}
+                disabled={busy}
               />
             </div>
 
             <Button
               type="submit"
-              disabled={!currentProduct.trim() || !newProduct.trim() || isLoading}
+              disabled={!currentProduct.trim() || !newProduct.trim() || busy}
               className="w-full h-14 text-lg font-semibold bg-gradient-tech hover:shadow-electric text-white transition-all duration-300 rounded-xl group disabled:opacity-50"
             >
-              {isLoading ? (
+              {busy ? (
                 <>
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   Analyzing...
@@ -102,12 +105,12 @@ const ComparisonFormInputs = ({
               )}
             </Button>
           </form>
-          {isLoading && (
+          {busy && (
             <div className="mt-6 space-y-4 text-center">
               <p className="text-sm text-tech-gray-500">
                 Interrogating the AI, this might take a moment… Enjoy a little game in the meantime?
               </p>
-              <SnakeGame active={isLoading} />
+              <SnakeGame active={busy} />
             </div>
           )}
         </CardContent>

@@ -48,6 +48,7 @@ export const useComparisonForm = () => {
   const [preciseDevice, setPreciseDevice] = useState('');
   const [pendingComparison, setPendingComparison] = useState<ComparisonData | null>(null);
   const [category, setCategory] = useState<string>('computer');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { toast } = useToast();
   
@@ -55,18 +56,22 @@ export const useComparisonForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    setIsSubmitting(true);
+
     console.log('Form submitted with:', { currentProduct, newProduct });
     
     // Check for special mock triggers
     if (currentProduct.toLowerCase() === 'error' || newProduct.toLowerCase() === 'error') {
       setNotFoundProduct(currentProduct.toLowerCase() === 'error' ? currentProduct : newProduct);
       setShowProductNotFound(true);
+      setIsSubmitting(false);
       return;
     }
     
     if (currentProduct.toLowerCase() === 'queue' || newProduct.toLowerCase() === 'queue') {
       setShowQueue(true);
+      setIsSubmitting(false);
       return;
     }
 
@@ -77,6 +82,7 @@ export const useComparisonForm = () => {
       // Check first if quota isn't exceeded
       if (geminiService.isQuotaExceeded()) {
         setShowQueueStatus(true);
+        setIsSubmitting(false);
         return;
       }
       
@@ -99,6 +105,7 @@ export const useComparisonForm = () => {
             newDevice: newProduct,
             explanation: `I cannot compare "${currentProduct}" and "${newProduct}" because they belong to different categories (${compatibility.category1} vs ${compatibility.category2}).`
           });
+          setIsSubmitting(false);
           return;
         }
 
@@ -115,6 +122,7 @@ export const useComparisonForm = () => {
               : newProduct;
           setPreciseDevice(deviceInfo);
           setShowPreciseSpecs(true);
+          setIsSubmitting(false);
           return;
         }
 
@@ -123,9 +131,11 @@ export const useComparisonForm = () => {
           setPendingComparison(result);
           setPreciseDevice(currentProduct);
           setShowPreciseSpecs(true);
+          setIsSubmitting(false);
           return;
         }
         setComparisonResult(result);
+        setIsSubmitting(false);
       } catch (error) {
         console.error('Comparison failed:', error);
         logDevError('Comparison failed', error);
@@ -148,6 +158,7 @@ export const useComparisonForm = () => {
             variant: 'destructive'
           });
         }
+        setIsSubmitting(false);
       }
     }
   };
@@ -220,6 +231,7 @@ export const useComparisonForm = () => {
     setNotFoundProduct('');
     setPreciseDevice('');
     setCategory('computer');
+    setIsSubmitting(false);
   };
 
   return {
@@ -237,6 +249,7 @@ export const useComparisonForm = () => {
     preciseDevice,
     category,
     isLoading,
+    isSubmitting,
     
     // State setters
     setShowProductNotFound,
