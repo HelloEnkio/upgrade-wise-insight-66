@@ -168,6 +168,29 @@ class GeminiServiceClass {
     }
   }
 
+  async checkDetailCompleteness(
+    currentDevice: string,
+    newDevice: string
+  ): Promise<{
+    current: { complete: boolean; missing: string[] };
+    new: { complete: boolean; missing: string[] };
+  }> {
+    const safeCurrent = sanitizeInput(currentDevice);
+    const safeNew = sanitizeInput(newDevice);
+    const prompt = `For each of the following product descriptions, tell me if it contains enough detail to uniquely identify the model (like model number or release year). List any missing elements.\n\nCurrent: ${safeCurrent}\nNew: ${safeNew}\n\nReturn only JSON in this format:\n{ "current": { "complete": boolean, "missing": string[] }, "new": { "complete": boolean, "missing": string[] } }`;
+
+    const response = await this.callGeminiAPI(prompt);
+    try {
+      return parseGeminiResponse(response);
+    } catch (error) {
+      console.error('Failed to parse Gemini response', { prompt, response });
+      if (error instanceof GeminiParseError || error instanceof GeminiTokenLimitError) {
+        throw error;
+      }
+      throw new GeminiParseError('Unexpected Gemini response');
+    }
+  }
+
   async getProductComparison(currentDevice: string, newDevice: string): Promise<any> {
     const safeCurrent = sanitizeInput(currentDevice);
     const safeNew = sanitizeInput(newDevice);

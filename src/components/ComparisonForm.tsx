@@ -89,6 +89,7 @@ const ComparisonForm = () => {
         onPreciseSpecsSubmit={handlePreciseSpecsSubmit}
         onSkipPreciseSpecs={handleSkipPreciseSpecs}
         isPaidUser={false}
+        preciseDevice={preciseDevice}
       />
     </>
   );

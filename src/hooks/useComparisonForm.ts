@@ -83,6 +83,37 @@ export const useComparisonForm = () => {
       
       // Proceed directly to comparison
       try {
+        const compatibility = await geminiService.checkComparability(
+          currentProduct,
+          newProduct
+        );
+
+        if (!compatibility.comparable) {
+          setComparisonResult({
+            isIncompatible: true,
+            currentDevice: currentProduct,
+            newDevice: newProduct,
+            explanation: `I cannot compare "${currentProduct}" and "${newProduct}" because they belong to different categories (${compatibility.category1} vs ${compatibility.category2}).`
+          });
+          return;
+        }
+
+        const completeness = await geminiService.checkDetailCompleteness(
+          currentProduct,
+          newProduct
+        );
+
+        if (!completeness.current.complete || !completeness.new.complete) {
+          const deviceInfo = !completeness.current.complete && !completeness.new.complete
+            ? `${currentProduct} and ${newProduct}`
+            : !completeness.current.complete
+              ? currentProduct
+              : newProduct;
+          setPreciseDevice(deviceInfo);
+          setShowPreciseSpecs(true);
+          return;
+        }
+
         const result = await simulateAnalysis(currentProduct, newProduct);
         if (!('isIncompatible' in result) && needsPreciseSpecs(result)) {
           setPendingComparison(result);
