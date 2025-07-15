@@ -47,4 +47,22 @@ describe('PreciseSpecsDialog', () => {
     expect(screen.getByLabelText(/Fuel Type/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Model Year/i)).toBeInTheDocument();
   });
+
+  it('places the skip button before other actions', () => {
+    render(
+      <PreciseSpecsDialog
+        isOpen={true}
+        onClose={() => {}}
+        onSubmit={() => {}}
+        onSkip={() => {}}
+      />
+    );
+
+    const skipButton = screen.getByText(/Whatever, just compare/i);
+    const cancelButton = screen.getByText('Cancel');
+
+    // Ensure the skip button appears before the cancel button in the DOM
+    const position = skipButton.compareDocumentPosition(cancelButton);
+    expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
 });

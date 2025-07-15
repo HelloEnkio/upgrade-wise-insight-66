@@ -170,6 +170,16 @@ const PreciseSpecsDialog = ({
         )}
         
         <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="flex justify-end">
+            <Button
+              type="button"
+              variant="secondary"
+              className="font-bold"
+              onClick={onSkip}
+            >
+              Whatever, just compare the most common configuration.
+            </Button>
+          </div>
           {specsList.map((specs, idx) => (
             <div
               key={idx}
@@ -220,9 +230,6 @@ const PreciseSpecsDialog = ({
             </p>
           </div>
           <div className="flex flex-col sm:flex-row sm:justify-end sm:space-x-2 space-y-2 sm:space-y-0">
-            <Button type="button" variant="ghost" onClick={onSkip}>
-              Whatever, just compare the most common configuration.
-            </Button>
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
