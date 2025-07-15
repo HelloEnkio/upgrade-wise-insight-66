@@ -1,11 +1,97 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Settings, Cpu, HardDrive, Monitor, Battery } from 'lucide-react';
+import {
+  Settings,
+  Cpu,
+  HardDrive,
+  Monitor,
+  Battery,
+  Car
+} from 'lucide-react';
+
+interface FieldDef {
+  key: string;
+  label: string;
+  placeholder?: string;
+  icon?: React.ReactNode;
+  textarea?: boolean;
+}
+
+const FIELD_SETS: Record<string, FieldDef[]> = {
+  computer: [
+    {
+      key: 'processor',
+      label: 'Processor',
+      placeholder: 'e.g., Apple M3, Intel Core i7-13700H',
+      icon: <Cpu className="h-4 w-4 text-blue-600" />
+    },
+    {
+      key: 'ram',
+      label: 'RAM',
+      placeholder: 'e.g., 16GB LPDDR5, 32GB DDR4',
+      icon: <HardDrive className="h-4 w-4 text-green-600" />
+    },
+    {
+      key: 'storage',
+      label: 'Storage',
+      placeholder: 'e.g., 512GB SSD, 1TB NVMe',
+      icon: <HardDrive className="h-4 w-4 text-purple-600" />
+    },
+    {
+      key: 'display',
+      label: 'Display',
+      placeholder: 'e.g., 13.6" Liquid Retina, 15.6" OLED 4K',
+      icon: <Monitor className="h-4 w-4 text-orange-600" />
+    },
+    {
+      key: 'battery',
+      label: 'Battery Life',
+      placeholder: 'e.g., 18 hours, 5000mAh',
+      icon: <Battery className="h-4 w-4 text-red-600" />
+    },
+    {
+      key: 'additionalSpecs',
+      label: 'Additional Specifications',
+      placeholder: 'Any other important specs (GPU, ports, weight, etc.)',
+      textarea: true
+    }
+  ],
+  vehicle: [
+    {
+      key: 'fuelType',
+      label: 'Fuel Type',
+      placeholder: 'e.g., Gasoline, Electric',
+      icon: <Car className="h-4 w-4 text-blue-600" />
+    },
+    {
+      key: 'modelYear',
+      label: 'Model Year',
+      placeholder: 'e.g., 2024'
+    },
+    {
+      key: 'transmission',
+      label: 'Transmission',
+      placeholder: 'e.g., Automatic'
+    },
+    {
+      key: 'additionalSpecs',
+      label: 'Additional Specifications',
+      placeholder: 'Any other important specs (trim, mileage, etc.)',
+      textarea: true
+    }
+  ]
+};
 
 interface PreciseSpecsDialogProps {
   isOpen: boolean;
@@ -14,27 +100,29 @@ interface PreciseSpecsDialogProps {
   onSkip: () => void;
   isPaidUser?: boolean;
   device?: string;
+  category?: string;
 }
 
-interface PreciseSpecs {
-  processor: string;
-  ram: string;
-  storage: string;
-  display: string;
-  battery: string;
-  additionalSpecs: string;
-}
+type PreciseSpecs = Record<string, string>;
 
-const emptySpecs: PreciseSpecs = {
-  processor: '',
-  ram: '',
-  storage: '',
-  display: '',
-  battery: '',
-  additionalSpecs: ''
+const buildEmptySpecs = (category: string): PreciseSpecs => {
+  const fields = FIELD_SETS[category] || FIELD_SETS.computer;
+  return fields.reduce<PreciseSpecs>((acc, f) => {
+    acc[f.key] = '';
+    return acc;
+  }, {} as PreciseSpecs);
 };
 
-const PreciseSpecsDialog = ({ isOpen, onClose, onSubmit, onSkip, isPaidUser = false, device }: PreciseSpecsDialogProps) => {
+const PreciseSpecsDialog = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  onSkip,
+  isPaidUser = false,
+  device,
+  category = 'computer'
+}: PreciseSpecsDialogProps) => {
+  const emptySpecs = buildEmptySpecs(category);
   const [specsList, setSpecsList] = useState<PreciseSpecs[]>([ { ...emptySpecs } ]);
 
   const addDevice = () => {
@@ -63,7 +151,7 @@ const PreciseSpecsDialog = ({ isOpen, onClose, onSubmit, onSkip, isPaidUser = fa
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="sm:max-w-lg max-h-[80vh] overflow-y-auto"
+        className="sm:max-w-lg max-h-[80vh] overflow-y-auto overflow-x-hidden"
         aria-describedby="precise-specs-desc"
       >
         <DialogHeader>
@@ -83,78 +171,42 @@ const PreciseSpecsDialog = ({ isOpen, onClose, onSubmit, onSkip, isPaidUser = fa
         
         <form onSubmit={handleSubmit} className="space-y-6">
           {specsList.map((specs, idx) => (
-            <div key={idx} className="space-y-4 border-b pb-4 last:border-none last:pb-0">
+            <div
+              key={idx}
+              className="space-y-4 border-b pb-4 last:border-none last:pb-0"
+            >
               <h3 className="font-semibold">Device {idx + 1}</h3>
-              <div className="space-y-2">
-                <Label htmlFor={`processor-${idx}`} className="flex items-center space-x-2">
-                  <Cpu className="h-4 w-4 text-blue-600" />
-                  <span>Processor</span>
-                </Label>
-                <Input
-                  id={`processor-${idx}`}
-                  placeholder="e.g., Apple M3, Intel Core i7-13700H"
-                  value={specs.processor}
-                  onChange={(e) => handleInputChange(idx, 'processor', e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor={`ram-${idx}`} className="flex items-center space-x-2">
-                  <HardDrive className="h-4 w-4 text-green-600" />
-                  <span>RAM</span>
-                </Label>
-                <Input
-                  id={`ram-${idx}`}
-                  placeholder="e.g., 16GB LPDDR5, 32GB DDR4"
-                  value={specs.ram}
-                  onChange={(e) => handleInputChange(idx, 'ram', e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor={`storage-${idx}`} className="flex items-center space-x-2">
-                  <HardDrive className="h-4 w-4 text-purple-600" />
-                  <span>Storage</span>
-                </Label>
-                <Input
-                  id={`storage-${idx}`}
-                  placeholder="e.g., 512GB SSD, 1TB NVMe"
-                  value={specs.storage}
-                  onChange={(e) => handleInputChange(idx, 'storage', e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor={`display-${idx}`} className="flex items-center space-x-2">
-                  <Monitor className="h-4 w-4 text-orange-600" />
-                  <span>Display</span>
-                </Label>
-                <Input
-                  id={`display-${idx}`}
-                  placeholder='e.g., 13.6" Liquid Retina, 15.6" OLED 4K'
-                  value={specs.display}
-                  onChange={(e) => handleInputChange(idx, 'display', e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor={`battery-${idx}`} className="flex items-center space-x-2">
-                  <Battery className="h-4 w-4 text-red-600" />
-                  <span>Battery Life</span>
-                </Label>
-                <Input
-                  id={`battery-${idx}`}
-                  placeholder="e.g., 18 hours, 5000mAh"
-                  value={specs.battery}
-                  onChange={(e) => handleInputChange(idx, 'battery', e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor={`additional-${idx}`}>Additional Specifications</Label>
-                <Textarea
-                  id={`additional-${idx}`}
-                  placeholder="Any other important specs (GPU, ports, weight, etc.)"
-                  value={specs.additionalSpecs}
-                  onChange={(e) => handleInputChange(idx, 'additionalSpecs', e.target.value)}
-                  rows={3}
-                />
-              </div>
+              {FIELD_SETS[category]?.map((field) => (
+                <div key={field.key} className="space-y-2">
+                  <Label
+                    htmlFor={`${field.key}-${idx}`}
+                    className="flex items-center space-x-2"
+                  >
+                    {field.icon}
+                    <span>{field.label}</span>
+                  </Label>
+                  {field.textarea ? (
+                    <Textarea
+                      id={`${field.key}-${idx}`}
+                      placeholder={field.placeholder}
+                      value={specs[field.key] || ''}
+                      onChange={(e) =>
+                        handleInputChange(idx, field.key as keyof PreciseSpecs, e.target.value)
+                      }
+                      rows={3}
+                    />
+                  ) : (
+                    <Input
+                      id={`${field.key}-${idx}`}
+                      placeholder={field.placeholder}
+                      value={specs[field.key] || ''}
+                      onChange={(e) =>
+                        handleInputChange(idx, field.key as keyof PreciseSpecs, e.target.value)
+                      }
+                    />
+                  )}
+                </div>
+              ))}
             </div>
           ))}
           {(isPaidUser || specsList.length < 2) && (
