@@ -88,3 +88,12 @@ Responses are limited to 4096 tokens to encourage concise answers and reduce quo
 
 ### Clarifying specifications
 If the automatic comparison doesn't provide enough specification data, the app now prompts you to enter precise specs for the device that needs clarification. This ensures the analysis is as accurate as possible.
+
+### Responsive specification dialog
+The precise specs dialog now adjusts to smaller screens and shows fields based on the device category (computer or vehicle). This keeps the form focused only on the information you need to provide.
+
+### Immediate loading feedback
+Clicking **Compare Now** instantly displays a spinner and small game so you know the comparison is running.
+
+### Navigating away
+Selecting the header while a result is on screen takes you back to the homepage, but first asks if you really want to leave.
