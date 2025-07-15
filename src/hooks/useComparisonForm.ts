@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMockData } from '@/hooks/useMockData';
 import { logDevError } from '@/lib/devLogger';
 import { geminiService } from '@/services/geminiService';
 import { useToast } from '@/hooks/use-toast';
 import { GeminiParseError, GeminiTokenLimitError } from '@/utils/geminiErrors';
 import { needsPreciseSpecs } from '@/utils/specCheck';
+import { useComparisonResult } from '@/contexts/ComparisonResultContext';
 
 interface ComparisonData {
   currentDevice: string;
@@ -50,9 +51,15 @@ export const useComparisonForm = () => {
   const [category, setCategory] = useState<string>('computer');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const { setHasResult } = useComparisonResult();
+
   const { toast } = useToast();
-  
+
   const { isLoading, simulateAnalysis } = useMockData();
+
+  useEffect(() => {
+    setHasResult(comparisonResult !== null);
+  }, [comparisonResult, setHasResult]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -224,6 +231,7 @@ export const useComparisonForm = () => {
     setCurrentProduct('');
     setNewProduct('');
     setComparisonResult(null);
+    setHasResult(false);
     setShowQueueStatus(false);
     setShowProductNotFound(false);
     setShowQueue(false);
