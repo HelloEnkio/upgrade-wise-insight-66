@@ -104,6 +104,9 @@ const ComparisonFormInputs = ({
                 </>
               )}
             </Button>
+            <p className="mt-2 text-xs text-tech-gray-400 text-center">
+              AI can make mistakes. Please verify key informations before considering a purchase.
+            </p>
           </form>
           {busy && (
             <div className="mt-6 space-y-4 text-center">
