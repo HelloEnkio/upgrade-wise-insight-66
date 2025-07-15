@@ -24,6 +24,7 @@ const ComparisonForm = () => {
     preciseDevice,
     category,
     isLoading,
+    isSubmitting,
     setShowProductNotFound,
     setShowQueue,
     setShowPreciseSpecs,
@@ -77,6 +78,7 @@ const ComparisonForm = () => {
         newProduct={newProduct}
         setNewProduct={setNewProduct}
         isLoading={isLoading}
+        isSubmitting={isSubmitting}
         onSubmit={handleSubmit}
       />
 
