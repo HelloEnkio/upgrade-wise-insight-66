@@ -1,18 +1,20 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useComparisonResult } from '@/contexts/ComparisonResultContext';
 
 const Header = () => {
   const { hasResult } = useComparisonResult();
+  const navigate = useNavigate();
 
   const handleHomeClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (hasResult) {
+      e.preventDefault();
       const proceed = window.confirm(
         'You have a comparison result. Navigating away will lose it. Continue?'
       );
-      if (!proceed) {
-        e.preventDefault();
+      if (proceed) {
+        navigate('/', { replace: true });
       }
     }
   };
