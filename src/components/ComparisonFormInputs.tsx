@@ -27,6 +27,7 @@ const ComparisonFormInputs = ({
   onSubmit
 }: ComparisonFormInputsProps) => {
   const busy = isLoading || isSubmitting;
+  const busyStage = isSubmitting && !isLoading ? 'checking' : isLoading ? 'analyzing' : null;
   return (
     <div className="w-full max-w-2xl mx-auto animate-slide-up space-y-6">
       {/* Free Service Indicator */}
@@ -95,7 +96,7 @@ const ComparisonFormInputs = ({
               {busy ? (
                 <>
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Analyzing...
+                  {busyStage === 'checking' ? 'Checking specs...' : 'Analyzing...'}
                 </>
               ) : (
                 <>
@@ -111,9 +112,11 @@ const ComparisonFormInputs = ({
           {busy && (
             <div className="mt-6 space-y-4 text-center">
               <p className="text-sm text-tech-gray-500">
-                Interrogating the AI, this might take a moment… Enjoy a little game in the meantime?
+                {busyStage === 'checking'
+                  ? 'Checking if we have all the necessary specs...'
+                  : 'Interrogating the AI and analyzing, this might take a moment...'}
               </p>
-              <SnakeGame active={busy} />
+              {busyStage === 'analyzing' && <SnakeGame active={true} />}
             </div>
           )}
         </CardContent>

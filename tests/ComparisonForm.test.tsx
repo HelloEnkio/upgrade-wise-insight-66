@@ -46,7 +46,7 @@ describe('ComparisonForm', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /compare now/i }));
 
-    expect(await screen.findByText(/Analyzing/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Checking specs/i)).toBeInTheDocument();
 
     analysis.resolve({
       isIncompatible: true,
