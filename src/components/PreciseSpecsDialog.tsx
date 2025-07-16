@@ -176,9 +176,9 @@ const PreciseSpecsDialog = ({
           <div className="flex justify-end">
             <Button
               type="button"
-              variant="secondary"
+              variant="default"
               size="lg"
-              className="font-bold"
+              className="font-bold border-2 border-primary"
               onClick={onSkip}
             >
               Whatever, just compare the most common specifications.
