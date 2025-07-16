@@ -155,7 +155,6 @@ const PreciseSpecsDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className="sm:max-w-lg max-h-[80vh] overflow-y-auto overflow-x-hidden"
-        aria-describedby="precise-specs-desc"
       >
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
@@ -163,7 +162,7 @@ const PreciseSpecsDialog = ({
             <span>Precise Specifications</span>
           </DialogTitle>
         </DialogHeader>
-        <DialogDescription id="precise-specs-desc">
+        <DialogDescription>
           Provide detailed hardware specifications for a more accurate comparison.
         </DialogDescription>
         {device && (
