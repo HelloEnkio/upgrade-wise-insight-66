@@ -148,6 +148,12 @@ class GeminiServiceClass {
     return json;
   }
 
+  /**
+   * Ask Gemini whether two product descriptions belong to comparable categories.
+   * If the first response says they are not comparable but both categories are
+   * identical, the call is retried once with the same prompt. The second result
+   * is returned when available, otherwise the initial response is used.
+   */
   async checkComparability(
     currentDevice: string,
     newDevice: string
@@ -156,9 +162,11 @@ class GeminiServiceClass {
     const safeNew = sanitizeInput(newDevice);
     const prompt = `Determine if the following products are comparable.\n\n- ${safeCurrent}\n- ${safeNew}\n\nReturn a JSON object with:\n{ "comparable": boolean, "category1": string, "category2": string }\nOnly provide the JSON.`;
 
+    // First attempt
     const response = await this.callGeminiAPI(prompt);
+    let result;
     try {
-      return parseGeminiResponse(response);
+      result = parseGeminiResponse(response);
     } catch (error) {
       console.error('Failed to parse Gemini response', { prompt, response });
       if (error instanceof GeminiParseError || error instanceof GeminiTokenLimitError) {
@@ -166,6 +174,19 @@ class GeminiServiceClass {
       }
       throw new GeminiParseError('Unexpected Gemini response');
     }
+
+    // Retry once if Gemini says not comparable but categories match
+    if (!result.comparable && result.category1 === result.category2) {
+      try {
+        const retryResponse = await this.callGeminiAPI(prompt);
+        result = parseGeminiResponse(retryResponse);
+      } catch (error) {
+        console.error('Gemini retry failed', { prompt, error });
+        // Fallback to the initial result
+      }
+    }
+
+    return result;
   }
 
   async checkDetailCompleteness(
