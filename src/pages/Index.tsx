@@ -8,9 +8,6 @@ import MultiCompare from '@/components/MultiCompare';
 const Index = () => {
   const [showMultiCompare, setShowMultiCompare] = useState(false);
   return <div className="min-h-screen bg-gradient-to-br from-tech-gray-50 via-white to-tech-neon/5 font-sans">
-      <div className="bg-tech-gray-100 text-tech-gray-700 text-center text-sm py-2 border-b border-tech-gray-200">
-        Ceci est la maj du 090725-1320
-      </div>
       <Header />
 
       <main className="container mx-auto px-6">
