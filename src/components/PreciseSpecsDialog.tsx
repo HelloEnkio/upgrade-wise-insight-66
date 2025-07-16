@@ -189,7 +189,7 @@ const PreciseSpecsDialog = ({
               className="space-y-4 border-b pb-4 last:border-none last:pb-0"
             >
               <h3 className="font-semibold">Device {idx + 1}</h3>
-              {FIELD_SETS[normalizedCategory]?.map((field) => (
+              {(FIELD_SETS[normalizedCategory] || FIELD_SETS.computer).map((field) => (
                 <div key={field.key} className="space-y-2">
                   <Label
                     htmlFor={`${field.key}-${idx}`}
