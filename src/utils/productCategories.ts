@@ -1,6 +1,22 @@
 
 export const productCategories = {
-  'electronics': ['macbook', 'iphone', 'samsung', 'laptop', 'phone', 'tablet', 'computer'],
+  'electronics': [
+    'macbook',
+    'iphone',
+    'samsung',
+    'xiaomi',
+    'pixel',
+    'google',
+    'oneplus',
+    'huawei',
+    'sony',
+    'oppo',
+    'smartphone',
+    'laptop',
+    'phone',
+    'tablet',
+    'computer'
+  ],
   'vehicles': ['car', 'voiture', 'vélo', 'bike', 'bicycle', 'motorcycle', 'moto'],
   'lighting': ['ampoule', 'bulb', 'led', 'lamp', 'éclairage'],
   'appliances': ['refrigerator', 'frigo', 'washing machine', 'lave-linge', 'microwave']
