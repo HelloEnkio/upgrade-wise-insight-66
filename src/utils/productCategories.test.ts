@@ -14,6 +14,10 @@ describe('getProductCategory', () => {
     expect(getProductCategory('ampoule LED')).toBe('lighting');
   });
 
+  it('detects smartphone brands as electronics', () => {
+    expect(getProductCategory('Xiaomi 12')).toBe('electronics');
+  });
+
   it('returns null for unknown product', () => {
     expect(getProductCategory('some random item')).toBeNull();
   });
