@@ -219,12 +219,47 @@ export const useComparisonForm = () => {
     }
   };
 
-  const handleSkipPreciseSpecs = () => {
-    if (pendingComparison) {
-      setComparisonResult(pendingComparison);
-      setPendingComparison(null);
+  const fetchCommonSpecsSummary = async (product: string): Promise<string> => {
+    try {
+      const specs = await geminiService.getProductSpecs(product);
+      if (specs && typeof specs === 'object') {
+        const { model, year, processor, ram, storage } = specs as any;
+        const summary = [model, year, processor, ram, storage]
+          .filter(Boolean)
+          .join(', ');
+        return summary ? `${product} (${summary})` : product;
+      }
+    } catch (error) {
+      console.error('Failed to fetch specs for', product, error);
+      logDevError('Failed to fetch specs', error);
     }
-    setShowPreciseSpecs(false);
+    return product;
+  };
+
+  const handleSkipPreciseSpecs = async () => {
+    try {
+      if (pendingComparison) {
+        setComparisonResult(pendingComparison);
+        setPendingComparison(null);
+      } else {
+        const [currentSummary, newSummary] = await Promise.all([
+          fetchCommonSpecsSummary(currentProduct),
+          fetchCommonSpecsSummary(newProduct)
+        ]);
+        const result = await simulateAnalysis(currentSummary, newSummary);
+        setComparisonResult(result);
+      }
+    } catch (error) {
+      console.error('Fallback comparison failed:', error);
+      logDevError('Fallback comparison failed', error);
+      toast({
+        title: 'Analysis Error',
+        description: 'Unable to analyze these products. Please try again later.',
+        variant: 'destructive'
+      });
+    } finally {
+      setShowPreciseSpecs(false);
+    }
   };
 
   const resetForm = () => {
