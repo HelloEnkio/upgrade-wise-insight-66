@@ -2,7 +2,8 @@ import { jsonrepair } from 'jsonrepair';
 import { GeminiParseError, GeminiTokenLimitError } from './geminiErrors';
 
 export function parseGeminiResponse(response: any): any {
-  const parts = response?.candidates?.[0]?.content?.parts;
+  const firstCandidate = response?.candidates?.[0] ?? {};
+  const parts = firstCandidate?.content?.parts;
   let text: string | undefined;
   if (Array.isArray(parts)) {
     for (const part of parts) {
@@ -13,6 +14,9 @@ export function parseGeminiResponse(response: any): any {
     }
   }
   if (!text) {
+    if (firstCandidate?.finishReason === 'MAX_TOKENS') {
+      throw new GeminiTokenLimitError('Response truncated due to token limit');
+    }
     console.error('Invalid Gemini response format:', JSON.stringify(response));
     throw new GeminiParseError('Invalid response format from Gemini');
   }
