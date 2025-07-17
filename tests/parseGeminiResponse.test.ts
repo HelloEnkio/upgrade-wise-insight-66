@@ -42,4 +42,13 @@ describe('parseGeminiResponse', () => {
     const response = buildResponse('Error: token limit exceeded');
     expect(() => parseGeminiResponse(response)).toThrow(GeminiTokenLimitError);
   });
+
+  it('throws GeminiTokenLimitError when finishReason indicates max tokens', () => {
+    const response = {
+      candidates: [
+        { content: {}, finishReason: 'MAX_TOKENS' }
+      ]
+    } as any;
+    expect(() => parseGeminiResponse(response)).toThrow(GeminiTokenLimitError);
+  });
 });
