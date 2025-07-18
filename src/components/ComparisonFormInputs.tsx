@@ -113,7 +113,7 @@ const ComparisonFormInputs = ({
             <div className="mt-6 space-y-4 text-center">
               <p className="text-sm text-tech-gray-500">
                 {busyStage === 'checking'
-                  ? 'Checking if we have all the necessary specs...'
+                  ? 'Checking if we have all the necessary specs (this can take 1\u20113 min)...'
                   : 'Interrogating the AI and analyzing, this might take a moment...'}
               </p>
               {busyStage === 'analyzing' && <SnakeGame active={true} />}
