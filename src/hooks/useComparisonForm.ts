@@ -252,13 +252,22 @@ export const useComparisonForm = () => {
     } catch (error) {
       console.error('Fallback comparison failed:', error);
       logDevError('Fallback comparison failed', error);
-      toast({
-        title: 'Analysis Error',
-        description: 'Unable to analyze these products. Please try again later.',
-        variant: 'destructive'
-      });
+      if (error instanceof GeminiTokenLimitError) {
+        toast({
+          title: 'Response Too Long',
+          description: 'The AI response exceeded the token limit.',
+          variant: 'destructive'
+        });
+      } else {
+        toast({
+          title: 'Analysis Error',
+          description: 'Unable to analyze these products. Please try again later.',
+          variant: 'destructive'
+        });
+      }
     } finally {
       setShowPreciseSpecs(false);
+      setIsSubmitting(false);
     }
   };
 
