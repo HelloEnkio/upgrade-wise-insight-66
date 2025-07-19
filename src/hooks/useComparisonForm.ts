@@ -237,6 +237,7 @@ export const useComparisonForm = () => {
   };
 
   const handleSkipPreciseSpecs = async () => {
+    setIsSubmitting(true);
     try {
       if (pendingComparison) {
         setComparisonResult(pendingComparison);
