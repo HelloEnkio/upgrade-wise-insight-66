@@ -74,16 +74,14 @@ const TechnicalView = ({ currentDevice, newDevice, specs }: TechnicalViewProps) 
               <TableRow>
                 <TableHead className="font-bold text-tech-dark">Component</TableHead>
                 <TableHead className="font-bold text-tech-dark text-center">
-                  <div className="text-sm font-semibold text-tech-electric mb-1">{currentDevice}</div>
-                  <div className="text-xs text-tech-gray-600 font-normal">Current</div>
+                  {currentDevice}
                 </TableHead>
                 <TableHead className="font-bold text-tech-dark text-center">
                   <div className="text-sm font-semibold mb-1">Impact</div>
                   <div className="text-xs text-tech-gray-600 font-normal">Better/Worse/Same</div>
                 </TableHead>
                 <TableHead className="font-bold text-tech-dark text-center">
-                  <div className="text-sm font-semibold text-tech-electric mb-1">{newDevice}</div>
-                  <div className="text-xs text-tech-gray-600 font-normal">New</div>
+                  {newDevice}
                 </TableHead>
                 <TableHead className="font-bold text-tech-dark text-center">Score</TableHead>
                 <TableHead className="font-bold text-tech-dark">Technical Details</TableHead>

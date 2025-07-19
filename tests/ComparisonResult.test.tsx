@@ -69,4 +69,10 @@ describe('ComparisonResult', () => {
     expect(screen.getByRole('rowheader', { name: /Battery/i })).toBeInTheDocument();
     expect(screen.getByText('Lasts longer')).toBeInTheDocument();
   });
+
+  it('does not show Current/New sublabels in headers', () => {
+    render(<ComparisonResult data={normalizedData} onReset={() => {}} />);
+    expect(screen.queryByText('Current')).toBeNull();
+    expect(screen.queryByText(/^New$/)).toBeNull();
+  });
 });

@@ -203,13 +203,11 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
                       <TableRow>
                         <TableHead className="font-bold text-tech-dark">Component</TableHead>
                         <TableHead className="font-bold text-tech-dark text-center">
-                          <div className="text-sm font-semibold text-tech-electric mb-1">{data.currentDevice}</div>
-                          <div className="text-xs text-tech-gray-600 font-normal">Current</div>
+                          {data.currentDevice}
                         </TableHead>
                         <TableHead className="font-bold text-tech-dark text-center">Impact</TableHead>
                         <TableHead className="font-bold text-tech-dark text-center">
-                          <div className="text-sm font-semibold text-tech-electric mb-1">{data.newDevice}</div>
-                          <div className="text-xs text-tech-gray-600 font-normal">New</div>
+                          {data.newDevice}
                         </TableHead>
                         <TableHead className="font-bold text-tech-dark text-center">Why Better?</TableHead>
                       </TableRow>
