@@ -51,4 +51,16 @@ describe('parseGeminiResponse', () => {
     } as any;
     expect(() => parseGeminiResponse(response)).toThrow(GeminiTokenLimitError);
   });
+
+  it('throws GeminiTokenLimitError when text is truncated but finishReason is MAX_TOKENS', () => {
+    const response = {
+      candidates: [
+        {
+          content: { parts: [{ text: '{"foo": 1' }] },
+          finishReason: 'MAX_TOKENS'
+        }
+      ]
+    } as any;
+    expect(() => parseGeminiResponse(response)).toThrow(GeminiTokenLimitError);
+  });
 });
