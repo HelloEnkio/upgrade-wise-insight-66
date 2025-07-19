@@ -21,6 +21,10 @@ export function parseGeminiResponse(response: any): any {
     throw new GeminiParseError('Invalid response format from Gemini');
   }
 
+  if (firstCandidate?.finishReason === 'MAX_TOKENS') {
+    throw new GeminiTokenLimitError('Response truncated due to token limit');
+  }
+
   const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) {
     const lower = text.toLowerCase();
