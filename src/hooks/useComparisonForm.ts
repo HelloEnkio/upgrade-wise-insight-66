@@ -122,23 +122,14 @@ export const useComparisonForm = () => {
         );
 
         if (!completeness.current.complete || !completeness.new.complete) {
-          const deviceInfo = !completeness.current.complete && !completeness.new.complete
-            ? `${currentProduct} and ${newProduct}`
-            : !completeness.current.complete
-              ? currentProduct
-              : newProduct;
-          setPreciseDevice(deviceInfo);
-          setShowPreciseSpecs(true);
-          setIsSubmitting(false);
+          await handleSkipPreciseSpecs();
           return;
         }
 
         const result = await simulateAnalysis(currentProduct, newProduct);
         if (!('isIncompatible' in result) && needsPreciseSpecs(result)) {
           setPendingComparison(result);
-          setPreciseDevice(currentProduct);
-          setShowPreciseSpecs(true);
-          setIsSubmitting(false);
+          await handleSkipPreciseSpecs();
           return;
         }
         setComparisonResult(result);
