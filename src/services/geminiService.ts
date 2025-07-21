@@ -2,6 +2,7 @@
 import { sanitizeInput } from '@/utils/sanitize';
 import { parseGeminiResponse } from '@/utils/parseGeminiResponse';
 import { GeminiParseError, GeminiTokenLimitError } from '@/utils/geminiErrors';
+import { simplifyCategory } from '@/utils/simplifyCategory';
 import { normalizeConnoisseurSpecs } from './specNormalizer';
 
 interface GeminiRequest {
@@ -160,13 +161,15 @@ class GeminiServiceClass {
   ): Promise<{ comparable: boolean; category1: string; category2: string }> {
     const safeCurrent = sanitizeInput(currentDevice);
     const safeNew = sanitizeInput(newDevice);
-    const prompt = `Determine if the following products are comparable.\n\n- ${safeCurrent}\n- ${safeNew}\n\nReturn a JSON object with:\n{ "comparable": boolean, "category1": string, "category2": string }\nOnly provide the JSON.`;
+    const prompt = `Determine if the following products are comparable.\n\n- ${safeCurrent}\n- ${safeNew}\n\nReturn a JSON object { "comparable": boolean, "category1": <one-word category>, "category2": <one-word category> }. Use a single-word category such as "smartphone" or "vehicle". Only provide the JSON.`;
 
     // First attempt
     const response = await this.callGeminiAPI(prompt);
     let result;
     try {
       result = parseGeminiResponse(response);
+      result.category1 = simplifyCategory(result.category1);
+      result.category2 = simplifyCategory(result.category2);
     } catch (error) {
       console.error('Failed to parse Gemini response', { prompt, response });
       if (error instanceof GeminiParseError || error instanceof GeminiTokenLimitError) {
@@ -180,6 +183,8 @@ class GeminiServiceClass {
       try {
         const retryResponse = await this.callGeminiAPI(prompt);
         result = parseGeminiResponse(retryResponse);
+        result.category1 = simplifyCategory(result.category1);
+        result.category2 = simplifyCategory(result.category2);
       } catch (error) {
         console.error('Gemini retry failed', { prompt, error });
         // Fallback to the initial result

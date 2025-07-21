@@ -33,4 +33,28 @@ describe('geminiService.checkComparability', () => {
     const result = await geminiService.checkComparability('iPhone', 'Samsung');
     expect(result).toEqual(second);
   });
+
+  it('normalizes multiword categories', async () => {
+    const response = {
+      comparable: true,
+      category1: 'Flagship Smartphone',
+      category2: 'Mid-range Smartphone'
+    };
+
+    const fetchMock = vi.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => wrap(response)
+    });
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    (geminiService as any).apiKey = 'test-key';
+
+    const result = await geminiService.checkComparability('iPhone', 'Samsung');
+    expect(result).toEqual({
+      comparable: true,
+      category1: 'flagship',
+      category2: 'mid-range'
+    });
+  });
 });
