@@ -23,6 +23,10 @@ class GeminiServiceClass {
   // Utilise le modèle Gemini 2.5 Flash en version gratuite
   private readonly GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
   private readonly ADMIN_EMAIL = 'votre-email@example.com'; // Email pour les alertes
+  private readonly maxOutputTokens: number = parseInt(
+    import.meta.env.VITE_GEMINI_MAX_OUTPUT_TOKENS ?? '8192',
+    10
+  );
 
   constructor() {
     this.initializeCounters();
@@ -131,7 +135,7 @@ class GeminiServiceClass {
           topK: 40,
           topP: 0.95,
           // Limit output length to keep responses concise
-          maxOutputTokens: 4096,
+          maxOutputTokens: this.maxOutputTokens,
         }
       })
     });
