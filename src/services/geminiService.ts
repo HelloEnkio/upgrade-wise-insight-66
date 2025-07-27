@@ -1,5 +1,5 @@
 
-import { sanitizeInput } from '@/utils/sanitize';
+import { sanitizeInput } from '@/utils/purify';
 import { parseGeminiResponse } from '@/utils/parseGeminiResponse';
 import { GeminiParseError, GeminiTokenLimitError } from '@/utils/geminiErrors';
 import { simplifyCategory } from '@/utils/simplifyCategory';
