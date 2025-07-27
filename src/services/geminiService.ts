@@ -24,7 +24,7 @@ class GeminiServiceClass {
   private readonly GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
   private readonly ADMIN_EMAIL = 'votre-email@example.com'; // Email pour les alertes
   private readonly maxOutputTokens: number = parseInt(
-    import.meta.env.VITE_GEMINI_MAX_OUTPUT_TOKENS ?? '8192',
+    import.meta.env.VITE_GEMINI_MAX_OUTPUT_TOKENS ?? '4096',
     10
   );
 
@@ -264,7 +264,7 @@ Please respond with a JSON object containing comprehensive specs including:
 - Technical details
 - Release information
 
-Be accurate and comprehensive.`;
+Be accurate and comprehensive. Limit the JSON response to under 500 tokens.`;
 
     const response = await this.callGeminiAPI(prompt);
     try {
