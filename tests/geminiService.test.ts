@@ -22,7 +22,9 @@ describe('geminiService.checkComparability', () => {
 
     const fetchMock = vi
       .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ allowed: true, used: 1 }) })
       .mockResolvedValueOnce({ ok: true, json: async () => wrap(first) })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ allowed: true, used: 2 }) })
       .mockResolvedValueOnce({ ok: true, json: async () => wrap(second) });
 
     vi.stubGlobal('fetch', fetchMock);
@@ -41,10 +43,10 @@ describe('geminiService.checkComparability', () => {
       category2: 'Mid-range Smartphone'
     };
 
-    const fetchMock = vi.fn().mockResolvedValueOnce({
-      ok: true,
-      json: async () => wrap(response)
-    });
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ allowed: true, used: 1 }) })
+      .mockResolvedValueOnce({ ok: true, json: async () => wrap(response) });
 
     vi.stubGlobal('fetch', fetchMock);
 

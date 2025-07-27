@@ -17,6 +17,7 @@ interface SpecsRequest {
 class GeminiServiceClass {
   // Clé API chargée depuis les variables d'environnement (Vite)
   private apiKey: string = import.meta.env.VITE_GEMINI_API_KEY ?? '';
+  private backendUrl: string = import.meta.env.VITE_BACKEND_URL ?? 'http://localhost:3001';
   private dailyRequestCount: number = 0;
   private lastResetDate: string = '';
   private readonly MAX_DAILY_REQUESTS = 490; // Sécurité: 490 au lieu de 500
@@ -55,21 +56,37 @@ class GeminiServiceClass {
     console.log('🔄 Compteur quotidien réinitialisé pour:', today);
   }
 
-  private checkDailyLimit(): boolean {
-    const today = new Date().toISOString().split('T')[0];
-    
-    // Reset counter if it's a new day
-    if (this.lastResetDate !== today) {
-      this.resetDailyCounter();
+  private async refreshUsage() {
+    try {
+      const res = await fetch(`${this.backendUrl}/api/usage`);
+      if (!res.ok) return;
+      const data = await res.json();
+      this.dailyRequestCount = data.used;
+      this.lastResetDate = new Date().toISOString().split('T')[0];
+      localStorage.setItem('gemini_daily_count', String(this.dailyRequestCount));
+      localStorage.setItem('gemini_last_reset', this.lastResetDate);
+    } catch (error) {
+      console.warn('Failed to refresh usage from backend', error);
     }
+  }
 
-    const limitReached = this.dailyRequestCount >= this.MAX_DAILY_REQUESTS;
-    
-    if (limitReached) {
-      this.logQuotaAlert();
+  private async checkBackendQuota(): Promise<boolean> {
+    try {
+      const res = await fetch(`${this.backendUrl}/api/increment`, { method: 'POST' });
+      if (!res.ok) throw new Error('Backend quota check failed');
+      const data = await res.json();
+      this.dailyRequestCount = data.used;
+      this.lastResetDate = new Date().toISOString().split('T')[0];
+      localStorage.setItem('gemini_daily_count', String(this.dailyRequestCount));
+      localStorage.setItem('gemini_last_reset', this.lastResetDate);
+      if (!data.allowed) {
+        this.logQuotaAlert();
+      }
+      return data.allowed;
+    } catch (error) {
+      console.error('Quota check failed', error);
+      throw new Error('Service temporairement indisponible. Réessayez plus tard.');
     }
-    
-    return !limitReached;
   }
 
   private logQuotaAlert() {
@@ -90,19 +107,14 @@ class GeminiServiceClass {
     // Pour l'instant, on log de manière très visible
   }
 
-  private incrementRequestCount() {
-    this.dailyRequestCount++;
-    localStorage.setItem('gemini_daily_count', this.dailyRequestCount.toString());
-    
+  private logLocalUsage() {
     const percentageUsed = Math.round((this.dailyRequestCount / this.MAX_DAILY_REQUESTS) * 100);
     console.log(`📊 Utilisation Gemini: ${this.dailyRequestCount}/${this.MAX_DAILY_REQUESTS} (${percentageUsed}%)`);
-    
-    // Alerte préventive à 80%
+
     if (percentageUsed >= 80 && percentageUsed < 90) {
       console.warn('⚠️ Attention: 80% du quota Gemini utilisé');
     }
-    
-    // Alerte critique à 90%
+
     if (percentageUsed >= 90) {
       console.error('🔥 CRITIQUE: 90% du quota Gemini utilisé - Limite proche!');
     }
@@ -113,7 +125,8 @@ class GeminiServiceClass {
       throw new Error('Clé API Gemini non configurée côté serveur - Contactez l\'administrateur');
     }
 
-    if (!this.checkDailyLimit()) {
+    const allowed = await this.checkBackendQuota();
+    if (!allowed) {
       throw new Error(`Service temporairement indisponible. Réessayez demain.`);
     }
 
@@ -149,7 +162,7 @@ class GeminiServiceClass {
     const json = await response.json();
     console.log('Gemini raw response:', JSON.stringify(json));
 
-    this.incrementRequestCount();
+    this.logLocalUsage();
     return json;
   }
 
