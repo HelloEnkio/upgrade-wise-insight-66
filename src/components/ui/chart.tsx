@@ -65,37 +65,41 @@ const ChartContainer = React.forwardRef<
 })
 ChartContainer.displayName = "Chart"
 
+const SAFE_COLOR_REGEX =
+  /^(#(?:[0-9a-fA-F]{3}){1,2}|rgb\((?:\s*\d+\s*,){2}\s*\d+\s*\)|rgba\((?:\s*\d+\s*,){3}\s*(?:0|1|0?\.\d+)\s*\)|var\(--[\w-]+\))$/i
+
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
-    ([_, config]) => config.theme || config.color
+    ([_, cfg]) => cfg.theme || cfg.color
   )
 
   if (!colorConfig.length) {
     return null
   }
 
-  return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
-${colorConfig
-  .map(([key, itemConfig]) => {
-    const color =
-      itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
-      itemConfig.color
-    return color ? `  --color-${key}: ${color};` : null
-  })
-  .join("\n")}
-}
-`
-          )
-          .join("\n"),
-      }}
-    />
-  )
+  const styleContent = Object.entries(THEMES)
+    .map(([theme, prefix]) => {
+      const rules = colorConfig
+        .map(([key, itemConfig]) => {
+          const color =
+            itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
+            itemConfig.color
+          return color && SAFE_COLOR_REGEX.test(color.trim())
+            ? `  --color-${key}: ${color};`
+            : null
+        })
+        .filter(Boolean)
+        .join("\n")
+      return rules ? `${prefix} [data-chart=${id}] {\n${rules}\n}` : null
+    })
+    .filter(Boolean)
+    .join("\n")
+
+  if (!styleContent) {
+    return null
+  }
+
+  return <style>{styleContent}</style>
 }
 
 const ChartTooltip = RechartsPrimitive.Tooltip
