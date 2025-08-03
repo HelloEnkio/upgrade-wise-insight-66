@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Header from '@/components/Header';
 import ComparisonForm from '@/components/ComparisonForm';
 import HowItWorks from '@/components/HowItWorks';
 import Footer from '@/components/Footer';
-import MultiCompareButton from '@/components/MultiCompareButton';
-import MultiCompare from '@/components/MultiCompare';
 const Index = () => {
-  const [showMultiCompare, setShowMultiCompare] = useState(false);
   return <div className="min-h-screen bg-gradient-to-br from-tech-gray-50 via-white to-tech-neon/5 font-sans">
       <Header />
 
@@ -36,21 +33,6 @@ const Index = () => {
           <ComparisonForm />
         </div>
 
-        {/* Multi Compare Button - Premium Feature */}
-        <div className="text-center mb-24">
-          <div className="inline-flex flex-col items-center space-y-3">
-            <div className="flex items-center space-x-2 text-xs text-tech-gray-500 mb-1">
-              <span className="px-2 py-1 bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-700 rounded-full font-medium">
-                ✨ Premium Feature
-              </span>
-            </div>
-            <MultiCompareButton onClick={() => setShowMultiCompare(true)} className="hover:scale-105 shadow-lg" />
-            <p className="text-xs text-tech-gray-400 max-w-md">
-              Compare up to 15 products simultaneously with detailed analysis tables
-            </p>
-          </div>
-        </div>
-
         {/* How It Works Section */}
         <div className="mb-20">
           <HowItWorks />
@@ -58,9 +40,6 @@ const Index = () => {
       </main>
 
       <Footer />
-      
-      {/* Multi Compare Modal */}
-      {showMultiCompare && <MultiCompare onClose={() => setShowMultiCompare(false)} />}
     </div>;
 };
 export default Index;
