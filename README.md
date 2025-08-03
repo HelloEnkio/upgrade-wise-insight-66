@@ -36,7 +36,11 @@ npm i
 
 # Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
+# Step 5: Start the quota server in another terminal
+npm run server
 ```
+
+The quota server listens on port `3001`. Ensure the `VITE_BACKEND_URL` in your `.env` file matches this port.
 
 **Edit a file directly in GitHub**
 
