@@ -102,7 +102,7 @@ class GeminiServiceClass {
     
     console.error('🚨 QUOTA ALERT:', alertData);
     
-    // Log pour monitoring externe (sera visible dans les logs Lovable)
+    // Logged for external monitoring
     console.log('ADMIN_ALERT:', JSON.stringify(alertData));
     
     // Ici, avec Supabase, on pourra envoyer un vrai email d'alerte
