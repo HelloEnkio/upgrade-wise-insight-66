@@ -12,8 +12,6 @@ import {
 } from '@/components/ui/table';
 import { CheckCircle, XCircle, AlertTriangle, ShoppingCart } from 'lucide-react';
 import TechnicalView from './TechnicalView';
-import MultiCompareButton from './MultiCompareButton';
-import MultiCompare from './MultiCompare';
 import { extractReasonCategory } from '@/utils/reasons';
 
 interface ComparisonData {
@@ -47,7 +45,6 @@ interface ComparisonResultProps {
 
 const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
   const [isConnoisseurView, setIsConnoisseurView] = useState(false);
-  const [showMultiCompare, setShowMultiCompare] = useState(false);
 
   const getRecommendationColor = () => {
     switch (data.recommendation) {
@@ -149,13 +146,6 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
               </div>
             )}
             
-            {/* Multi Compare Button */}
-            <div className="mt-6 pt-4 border-t border-tech-gray-200">
-              <MultiCompareButton 
-                onClick={() => setShowMultiCompare(true)}
-                className="text-xs"
-              />
-            </div>
           </CardContent>
         </Card>
 
@@ -274,10 +264,6 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
         </div>
       </div>
       
-      {/* Multi Compare Modal */}
-      {showMultiCompare && (
-        <MultiCompare onClose={() => setShowMultiCompare(false)} />
-      )}
     </>
   );
 };
