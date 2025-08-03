@@ -4,7 +4,7 @@ import { logDevError } from '@/lib/devLogger';
 interface QueuedRequest {
   id: string;
   priority: 'high' | 'normal' | 'low';
-  type: 'comparison' | 'specs' | 'cache-update' | 'multi-comparison';
+  type: 'comparison' | 'specs' | 'cache-update';
   data: any;
   resolve: (value: any) => void;
   reject: (error: any) => void;

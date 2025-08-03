@@ -319,40 +319,6 @@ Be accurate and comprehensive. Limit the JSON response to under 500 tokens.`;
     }
   }
 
-  async getMultiComparison(products: string[]): Promise<any> {
-    const prompt = `Compare the following products and provide an overall analysis table:
-
-${products.join('\n')}
-
-Respond with a JSON object like:
-{
-  "categories": ["Performance", "Price", "Battery", "Display", "Storage", "Camera"],
-  "products": [
-    {
-      "name": "Product name",
-      "scores": { "Performance": 90, "Price": 80, ... },
-      "overallScore": 85,
-      "recommendation": "Best Choice",
-      "affiliateLink": "https://example.com"
-    }
-  ]
-}
-
-Only provide valid JSON.`;
-
-    const response = await this.callGeminiAPI(prompt);
-    try {
-      return parseGeminiResponse(response);
-    } catch (error) {
-      console.error('Failed to parse Gemini response', { prompt, response });
-      if (error instanceof GeminiParseError || error instanceof GeminiTokenLimitError) {
-        throw error;
-      }
-      throw new GeminiParseError('Unexpected Gemini response');
-    }
-  }
-
-
   getDailyUsage() {
     return {
       used: this.dailyRequestCount,
