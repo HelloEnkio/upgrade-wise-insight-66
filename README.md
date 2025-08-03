@@ -1,82 +1,70 @@
-# Welcome to your Lovable project
+# Is it Better?
 
-## Project info
+Smart tech product comparison tool powered by AI.
 
-**URL**: https://lovable.dev/projects/e7add94a-b181-432f-91dd-b205b8a3f9ed
+## Overview
 
-## How can I edit this code?
+Is it Better? helps you decide whether upgrading your device is worthwhile. Enter your current device and the one you're considering, and the app compares performance, features, and value using Google's Gemini 2.5 Flash model. A lightweight Express backend tracks daily usage to stay within the free API quota.
 
-There are several ways of editing your application.
+## Getting started
 
-**Use Lovable**
+### Prerequisites
+- Node.js 20 (see `.nvmrc`)
+- npm
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e7add94a-b181-432f-91dd-b205b8a3f9ed) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-This project recommends using **Node.js 20**, which is tracked in the `.nvmrc` file.
-
-Follow these steps:
+### Setup
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Clone the repository
+git clone <repository-url>
+cd upgrade-wise-insight-66
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Install dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-# Step 5: Start the quota server in another terminal
-npm run server
+# Configure environment variables
+cp .env.example .env
+# Edit .env and set VITE_GEMINI_API_KEY=<your Gemini key>
+# Optionally set VITE_BACKEND_URL (defaults to http://localhost:3001)
 ```
 
-The quota server listens on port `3001`. Ensure the `VITE_BACKEND_URL` in your `.env` file matches this port.
+### Development
 
-**Edit a file directly in GitHub**
+Run the front-end and quota server in separate terminals:
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```sh
+npm run dev       # Vite dev server
+npm run server    # Express quota server on port 3001
+```
 
-**Use GitHub Codespaces**
+Ensure `VITE_BACKEND_URL` in `.env` matches the port used by the server.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Deployment
 
-## What technologies are used for this project?
+1. **Build the front end**
 
-This project is built with:
+   ```sh
+   npm run build
+   ```
+
+   Host the generated `dist/` directory on any static file server or CDN.
+
+2. **Deploy the quota server**
+
+   ```sh
+   node server/server.js
+   ```
+
+   Set the `PORT` environment variable if you need a port other than `3001`, and update `VITE_BACKEND_URL` accordingly before building.
+
+## Technologies
 
 - Vite
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/e7add94a-b181-432f-91dd-b205b8a3f9ed) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- Express
 
 ## Configuration
 
@@ -87,20 +75,20 @@ cp .env.example .env
 # Edit .env and set VITE_GEMINI_API_KEY=<your Gemini key>
 ```
 
-The application uses the free Gemini 2.5 Flash model with a daily limit of 500 requests. The code enforces a safety threshold of 490 requests per day to avoid hitting the quota.
-Responses are limited to 4096 tokens to encourage concise answers and reduce quota usage.
+The application uses the free Gemini 2.5 Flash model with a daily limit of 500 requests. The code enforces a safety threshold of 490 requests per day to avoid hitting the quota. Responses are limited to 4096 tokens to encourage concise answers and reduce quota usage.
 
 ### Limiting response length
 `VITE_GEMINI_MAX_OUTPUT_TOKENS` controls the maximum number of tokens Gemini will return. It's set to `4096` in `.env.example`, but you can lower this value in your `.env` file if the answers are too long.
 
 ### Clarifying specifications
-If the automatic comparison doesn't provide enough specification data, the app now prompts you to enter precise specs for the device that needs clarification. This ensures the analysis is as accurate as possible.
+If the automatic comparison doesn't provide enough specification data, the app prompts you to enter precise specs for the device that needs clarification. This ensures the analysis is as accurate as possible.
 
 ### Responsive specification dialog
-The precise specs dialog now adjusts to smaller screens and shows fields based on the device category (computer or vehicle). This keeps the form focused only on the information you need to provide.
+The precise specs dialog adjusts to smaller screens and shows fields based on the device category (computer or vehicle). This keeps the form focused only on the information you need to provide.
 
 ### Immediate loading feedback
 Clicking **Compare Now** instantly displays a spinner and small game so you know the comparison is running.
 
 ### Navigating away
 Selecting the header while a result is on screen takes you back to the homepage, but first asks if you really want to leave.
+
