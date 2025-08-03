@@ -250,7 +250,7 @@ Return a JSON object with:
 - takeHome: short summary of the key points
 - connoisseurSpecs: detailed technical comparison with category, current value, new value, improvement, score and details
 
-Focus on performance, features, value and user experience. Only output valid JSON.`;
+Focus on performance, features, value and user experience. Limit the JSON response to under 500 tokens. Only output valid JSON.`;
 
     const response = await this.callGeminiAPI(prompt);
     try {
@@ -260,8 +260,34 @@ Focus on performance, features, value and user experience. Only output valid JSO
       }
       return result;
     } catch (error) {
+      if (error instanceof GeminiTokenLimitError) {
+        console.warn('Gemini token limit reached, retrying with simplified prompt');
+
+        const simplifiedPrompt = `Compare these two devices:
+
+Current device: ${safeCurrent}
+New device: ${safeNew}
+
+Return a JSON object with:
+- recommendation: "upgrade" | "keep" | "maybe"
+- score: number (0-100)
+- takeHome: short summary of the key points
+
+Focus on performance, features, value and user experience. Limit the JSON response to under 500 tokens. Only output valid JSON.`;
+
+        try {
+          const simplifiedResponse = await this.callGeminiAPI(simplifiedPrompt);
+          return parseGeminiResponse(simplifiedResponse);
+        } catch (simplifiedError) {
+          console.error('Failed to get simplified Gemini response', simplifiedError);
+          return {
+            message: 'La réponse est trop volumineuse. Veuillez simplifier votre description et réessayer.'
+          };
+        }
+      }
+
       console.error('Failed to parse Gemini response', { prompt, response });
-      if (error instanceof GeminiParseError || error instanceof GeminiTokenLimitError) {
+      if (error instanceof GeminiParseError) {
         throw error;
       }
       throw new GeminiParseError('Unexpected Gemini response');
