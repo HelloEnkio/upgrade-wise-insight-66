@@ -31,23 +31,12 @@ class BackendServiceClass {
     }
   }
 
-  async getMultiComparison(products: string[]): Promise<any> {
-    try {
-      return await geminiService.getMultiComparison(products);
-    } catch (error) {
-      console.error('Multi comparison error:', error);
-      throw error;
-    }
-  }
-
   async processRequest(type: string, data: any): Promise<any> {
     switch (type) {
       case 'comparison':
         return this.getProductComparison(data.currentDevice, data.newDevice);
       case 'specs':
         return this.getProductSpecs(data.productName);
-      case 'multi-comparison':
-        return this.getMultiComparison(data.products);
       default:
         throw new Error(`Unknown request type: ${type}`);
     }
