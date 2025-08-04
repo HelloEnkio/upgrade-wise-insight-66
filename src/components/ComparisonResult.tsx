@@ -137,8 +137,7 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
                   className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group"
                 >
                   <ShoppingCart className="mr-3 h-5 w-5 group-hover:animate-bounce" />
-                  Buy {data.newDevice} Now
-                  <span className="ml-2 text-sm opacity-90">Best Price</span>
+                  Check {data.newDevice} on Amazon
                 </button>
                 <p className="text-xs text-tech-gray-500 mt-2">
                   Affiliate link - We may earn a commission
