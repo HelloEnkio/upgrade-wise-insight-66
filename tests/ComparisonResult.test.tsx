@@ -75,4 +75,12 @@ describe('ComparisonResult', () => {
     expect(screen.queryByText('Current')).toBeNull();
     expect(screen.queryByText(/^New$/)).toBeNull();
   });
+
+  it('renders Buy Me A Coffee link with correct attributes', () => {
+    render(<ComparisonResult data={normalizedData} onReset={() => {}} />);
+    const link = screen.getByRole('link', { name: /Buy Me A Coffee/i });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', 'https://buymeacoffee.com/enkio');
+    expect(link).toHaveAttribute('target', '_blank');
+  });
 });
