@@ -3,11 +3,13 @@ import React, { createContext, useContext, useState } from 'react';
 interface ComparisonResultContextValue {
   hasResult: boolean;
   setHasResult: (value: boolean) => void;
+  resetResult: () => void;
 }
 
 const ComparisonResultContext = createContext<ComparisonResultContextValue>({
   hasResult: false,
   setHasResult: () => {},
+  resetResult: () => {},
 });
 
 interface ProviderProps {
@@ -17,8 +19,9 @@ interface ProviderProps {
 
 export const ComparisonResultProvider = ({ children, initialHasResult = false }: ProviderProps) => {
   const [hasResult, setHasResult] = useState(initialHasResult);
+  const resetResult = () => setHasResult(false);
   return (
-    <ComparisonResultContext.Provider value={{ hasResult, setHasResult }}>
+    <ComparisonResultContext.Provider value={{ hasResult, setHasResult, resetResult }}>
       {children}
     </ComparisonResultContext.Provider>
   );
