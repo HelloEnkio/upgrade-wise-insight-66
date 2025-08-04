@@ -56,7 +56,7 @@ const Terms = () => {
                   <div>
                     <h4 className="font-semibold text-tech-dark mb-2">Permitted Uses</h4>
                     <ul className="text-tech-gray-700 space-y-1">
-                      <li>• Compare technology products for personal or business decision-making</li>
+                      <li>• Compare two technology products for personal or business decision-making</li>
                       <li>• Access AI-powered recommendations and insights</li>
                       <li>• Share comparison results with others</li>
                       <li>• Use the Service for educational or research purposes</li>
