@@ -51,7 +51,7 @@ export const useComparisonForm = () => {
   const [category, setCategory] = useState<string>('computer');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { setHasResult } = useComparisonResult();
+  const { setHasResult, resetResult } = useComparisonResult();
 
   const { toast } = useToast();
 
@@ -267,7 +267,7 @@ export const useComparisonForm = () => {
     setCurrentProduct('');
     setNewProduct('');
     setComparisonResult(null);
-    setHasResult(false);
+    resetResult();
     setShowQueueStatus(false);
     setShowProductNotFound(false);
     setShowQueue(false);

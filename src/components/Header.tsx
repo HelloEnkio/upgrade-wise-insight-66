@@ -5,7 +5,7 @@ import { useComparisonResult } from '@/contexts/ComparisonResultContext';
 import LeaveResultDialog from './LeaveResultDialog';
 
 const Header = () => {
-  const { hasResult, setHasResult } = useComparisonResult();
+  const { hasResult, resetResult } = useComparisonResult();
   const navigate = useNavigate();
   const [showDialog, setShowDialog] = useState(false);
 
@@ -18,7 +18,7 @@ const Header = () => {
 
   const handleConfirm = () => {
     setShowDialog(false);
-    setHasResult(false);
+    resetResult();
     navigate('/', { replace: true });
   };
 
