@@ -47,6 +47,7 @@ const TechnicalView = ({ currentDevice, newDevice, specs }: TechnicalViewProps) 
   };
 
   const getScoreColor = (score: number) => {
+    if (score === 0) return 'text-tech-gray-600 font-semibold';
     if (score >= 80) return 'text-green-600 font-bold';
     if (score >= 60) return 'text-yellow-600 font-semibold';
     return 'text-red-600 font-semibold';
@@ -112,7 +113,9 @@ const TechnicalView = ({ currentDevice, newDevice, specs }: TechnicalViewProps) 
                     <div className="text-xs text-tech-gray-600 mt-1">{spec.new.technical}</div>
                   </TableCell>
                   <TableCell className="text-center">
-                    <span className={getScoreColor(spec.score)}>{spec.score}/100</span>
+                    <span className={getScoreColor(spec.score)}>
+                      {spec.score === 0 ? '-' : `${spec.score}/100`}
+                    </span>
                   </TableCell>
                   <TableCell className="text-sm text-tech-gray-600 max-w-xs">
                     {spec.details}
