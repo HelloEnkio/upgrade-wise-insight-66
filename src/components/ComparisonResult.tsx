@@ -259,7 +259,7 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
             onClick={onReset}
             className="px-8 py-3 bg-gradient-to-r from-tech-electric to-tech-neon text-white font-semibold rounded-xl hover:shadow-electric transition-all duration-300"
           >
-            Compare Other Devices
+            Compare Another Device
           </button>
         </div>
       </div>

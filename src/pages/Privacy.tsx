@@ -35,7 +35,7 @@ const Privacy = () => {
                   Is it Better? collects only the information necessary to provide our comparison service:
                 </p>
                 <ul className="text-tech-gray-700 space-y-2">
-                  <li>• Product names and specifications you enter for comparison</li>
+                  <li>• Product names and specifications for the two devices you compare</li>
                   <li>• Technical data submitted through our forms</li>
                   <li>• Essential cookies for website functionality</li>
                   <li>• Anonymous usage analytics to improve our service</li>
@@ -60,9 +60,9 @@ const Privacy = () => {
                 </p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="bg-tech-gray-50 p-4 rounded-lg">
-                    <h4 className="font-semibold text-tech-dark mb-2">Product Comparisons</h4>
+                    <h4 className="font-semibold text-tech-dark mb-2">Device Comparison</h4>
                     <p className="text-sm text-tech-gray-600">
-                      Analyzing and comparing technical specifications of devices
+                      Analyzing and comparing technical specifications of two devices
                     </p>
                   </div>
                   <div className="bg-tech-gray-50 p-4 rounded-lg">

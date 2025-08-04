@@ -1,10 +1,12 @@
 # Is it Better?
 
-Smart tech product comparison tool powered by AI.
+Smart two-device comparison tool powered by AI.
 
 ## Overview
 
-Is it Better? helps you decide whether upgrading your device is worthwhile. Enter your current device and the one you're considering, and the app compares performance, features, and value using Google's Gemini 2.5 Flash model. A lightweight Express backend tracks daily usage to stay within the free API quota.
+Is it Better? helps you decide whether upgrading your device is worthwhile. Enter your current device and the one you're considering, and the app compares the two side by side—evaluating performance, features, and value using Google's Gemini 2.5 Flash model. A lightweight Express backend tracks daily usage to stay within the free API quota.
+
+The service focuses on simple, one-to-one comparisons and does not support evaluating more than two devices at a time.
 
 ## Getting started
 
