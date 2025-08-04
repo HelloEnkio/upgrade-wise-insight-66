@@ -106,6 +106,9 @@ const ComparisonFormInputs = ({
               )}
             </Button>
             <p className="mt-2 text-xs text-tech-gray-400 text-center">
+              Tip: include the year, model, or specific specs if you want them taken into account.
+            </p>
+            <p className="mt-1 text-xs text-tech-gray-400 text-center">
               AI can make mistakes. Please verify key informations before considering a purchase.
             </p>
           </form>
