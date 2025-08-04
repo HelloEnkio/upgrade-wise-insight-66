@@ -83,4 +83,33 @@ describe('ComparisonResult', () => {
     expect(link).toHaveAttribute('href', 'https://buymeacoffee.com/enkio');
     expect(link).toHaveAttribute('target', '_blank');
   });
+
+  it('shows a dash instead of 0/100 when a spec score is 0', async () => {
+    const zeroScoreData = {
+      ...mockData,
+      connoisseurSpecs: [
+        {
+          category: 'CPU',
+          currentValue: 'A1',
+          currentTechnical: 'specA',
+          newValue: 'B1',
+          newTechnical: 'specB',
+          improvement: 'same' as const,
+          score: 0,
+          details: 'Equal',
+        },
+      ],
+    };
+    const normalizedZeroScoreData = {
+      ...zeroScoreData,
+      connoisseurSpecs: normalizeConnoisseurSpecs(zeroScoreData.connoisseurSpecs),
+    };
+
+    render(<ComparisonResult data={normalizedZeroScoreData} onReset={() => {}} />);
+
+    await userEvent.click(screen.getByRole('switch'));
+
+    expect(screen.getByText('-')).toBeInTheDocument();
+    expect(screen.queryByText('0/100')).toBeNull();
+  });
 });
