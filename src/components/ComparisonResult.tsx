@@ -10,7 +10,7 @@ import {
   TableHead,
   TableCell,
 } from '@/components/ui/table';
-import { CheckCircle, XCircle, AlertTriangle, ShoppingCart } from 'lucide-react';
+import { CheckCircle, XCircle, AlertTriangle, ShoppingCart, Coffee } from 'lucide-react';
 import TechnicalView from './TechnicalView';
 import { extractReasonCategory } from '@/utils/reasons';
 
@@ -251,6 +251,18 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
             )}
           </>
         )}
+
+        <div className="text-center mt-6">
+          <a
+            href="https://buymeacoffee.com/enkio"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center px-6 py-3 bg-yellow-400 text-black font-semibold rounded-lg shadow hover:bg-yellow-500 transition-colors"
+          >
+            <Coffee className="mr-2 h-5 w-5" />
+            Buy Me A Coffee
+          </a>
+        </div>
 
         {/* Bouton pour recommencer */}
         <div className="text-center">
