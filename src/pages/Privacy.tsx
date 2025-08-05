@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,8 +9,22 @@ import { Shield, Eye, Lock, Database } from 'lucide-react';
 const Privacy = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-tech-gray-50 via-white to-tech-neon/5 font-sans">
+      <Helmet>
+        <title>Privacy Policy - Is it Better?</title>
+        <meta
+          name="description"
+          content="Your privacy is important to us. Learn how Is it Better? protects and handles your data."
+        />
+        <meta property="og:title" content="Privacy Policy - Is it Better?" />
+        <meta
+          property="og:description"
+          content="Your privacy is important to us. Learn how Is it Better? protects and handles your data."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://isitbetter.com/privacy" />
+      </Helmet>
       <Header />
-      
+
       <main className="container mx-auto px-6 py-16">
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
