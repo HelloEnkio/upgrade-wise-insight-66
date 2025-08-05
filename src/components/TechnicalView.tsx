@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { formatDeviceName } from '@/utils/strings';
 
 interface TechnicalSpec {
   category: string;
@@ -26,6 +27,8 @@ interface TechnicalViewProps {
 }
 
 const TechnicalView = ({ currentDevice, newDevice, specs }: TechnicalViewProps) => {
+  const currentDeviceName = formatDeviceName(currentDevice);
+  const newDeviceName = formatDeviceName(newDevice);
   const getImprovementIcon = (improvement: string) => {
     switch (improvement) {
       case 'better': return (
@@ -75,14 +78,14 @@ const TechnicalView = ({ currentDevice, newDevice, specs }: TechnicalViewProps) 
               <TableRow>
                 <TableHead className="font-bold text-tech-dark">Component</TableHead>
                 <TableHead className="font-bold text-tech-dark text-center">
-                  {currentDevice}
+                  {currentDeviceName}
                 </TableHead>
                 <TableHead className="font-bold text-tech-dark text-center">
                   <div className="text-sm font-semibold mb-1">Impact</div>
                   <div className="text-xs text-tech-gray-600 font-normal">Better/Worse/Same</div>
                 </TableHead>
                 <TableHead className="font-bold text-tech-dark text-center">
-                  {newDevice}
+                  {newDeviceName}
                 </TableHead>
                 <TableHead className="font-bold text-tech-dark text-center">Score</TableHead>
                 <TableHead className="font-bold text-tech-dark">Technical Details</TableHead>

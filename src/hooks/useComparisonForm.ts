@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { GeminiParseError, GeminiTokenLimitError } from '@/utils/geminiErrors';
 import { needsPreciseSpecs } from '@/utils/specCheck';
 import { useComparisonResult } from '@/contexts/ComparisonResultContext';
+import { formatDeviceName } from '@/utils/strings';
 
 interface ComparisonData {
   currentDevice: string;
@@ -57,6 +58,12 @@ export const useComparisonForm = () => {
 
   const { isLoading, simulateAnalysis } = useMockData();
 
+  const formatDevices = (data: ComparisonData | IncompatibleComparison) => ({
+    ...data,
+    currentDevice: formatDeviceName(data.currentDevice),
+    newDevice: formatDeviceName(data.newDevice),
+  });
+
   useEffect(() => {
     setHasResult(comparisonResult !== null);
   }, [comparisonResult, setHasResult]);
@@ -106,12 +113,14 @@ export const useComparisonForm = () => {
         }
 
         if (!compatibility.comparable) {
-          setComparisonResult({
-            isIncompatible: true,
-            currentDevice: currentProduct,
-            newDevice: newProduct,
-            explanation: `I cannot compare "${currentProduct}" and "${newProduct}" because they belong to different categories (${compatibility.category1} vs ${compatibility.category2}).`
-          });
+          setComparisonResult(
+            formatDevices({
+              isIncompatible: true,
+              currentDevice: currentProduct,
+              newDevice: newProduct,
+              explanation: `I cannot compare "${currentProduct}" and "${newProduct}" because they belong to different categories (${compatibility.category1} vs ${compatibility.category2}).`
+            })
+          );
           setIsSubmitting(false);
           return;
         }
@@ -127,12 +136,13 @@ export const useComparisonForm = () => {
         }
 
         const result = await simulateAnalysis(currentProduct, newProduct);
-        if (!('isIncompatible' in result) && needsPreciseSpecs(result)) {
-          setPendingComparison(result);
+        const formattedResult = formatDevices(result);
+        if (!('isIncompatible' in formattedResult) && needsPreciseSpecs(formattedResult)) {
+          setPendingComparison(formattedResult);
           await handleSkipPreciseSpecs();
           return;
         }
-        setComparisonResult(result);
+        setComparisonResult(formattedResult);
         setIsSubmitting(false);
       } catch (error) {
         console.error('Comparison failed:', error);
@@ -178,13 +188,14 @@ export const useComparisonForm = () => {
         detailedCurrent,
         detailedNew
       );
-      if (!('isIncompatible' in result) && needsPreciseSpecs(result)) {
+      const formattedResult = formatDevices(result);
+      if (!('isIncompatible' in formattedResult) && needsPreciseSpecs(formattedResult)) {
         setPreciseDevice(preciseDevice);
         setShowPreciseSpecs(true);
         return;
       }
       setPendingComparison(null);
-      setComparisonResult(result);
+      setComparisonResult(formattedResult);
     } catch (error) {
       console.error('Precise analysis failed:', error);
       logDevError('Precise analysis failed', error);
@@ -231,7 +242,7 @@ export const useComparisonForm = () => {
     setIsSubmitting(true);
     try {
       if (pendingComparison) {
-        setComparisonResult(pendingComparison);
+        setComparisonResult(formatDevices(pendingComparison));
         setPendingComparison(null);
       } else {
         const [currentSummary, newSummary] = await Promise.all([
@@ -239,7 +250,7 @@ export const useComparisonForm = () => {
           fetchCommonSpecsSummary(newProduct)
         ]);
         const result = await simulateAnalysis(currentSummary, newSummary);
-        setComparisonResult(result);
+        setComparisonResult(formatDevices(result));
       }
     } catch (error) {
       console.error('Fallback comparison failed:', error);

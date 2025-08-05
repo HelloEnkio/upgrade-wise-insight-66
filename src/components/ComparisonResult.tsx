@@ -13,6 +13,7 @@ import {
 import { CheckCircle, XCircle, AlertTriangle, ShoppingCart, Coffee } from 'lucide-react';
 import TechnicalView from './TechnicalView';
 import { extractReasonCategory } from '@/utils/reasons';
+import { formatDeviceName } from '@/utils/strings';
 
 interface ComparisonData {
   currentDevice: string;
@@ -45,6 +46,8 @@ interface ComparisonResultProps {
 
 const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
   const [isConnoisseurView, setIsConnoisseurView] = useState(false);
+  const currentDeviceName = formatDeviceName(data.currentDevice);
+  const newDeviceName = formatDeviceName(data.newDevice);
 
   const getRecommendationColor = () => {
     switch (data.recommendation) {
@@ -108,7 +111,7 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
 
   const handleBuyClick = () => {
     // Ici on pourrait ajouter le tracking analytics et rediriger vers le lien d'affiliation
-    console.log('Affiliate link clicked for:', data.newDevice);
+    console.log('Affiliate link clicked for:', newDeviceName);
     // window.open(affiliateLink, '_blank');
   };
 
@@ -137,7 +140,7 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
                   className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 group"
                 >
                   <ShoppingCart className="mr-3 h-5 w-5 group-hover:animate-bounce" />
-                  Check {data.newDevice} on Amazon
+                  Check {newDeviceName} on Amazon
                 </button>
                 <p className="text-xs text-tech-gray-500 mt-2">
                   Affiliate link - We may earn a commission
@@ -171,8 +174,8 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
         {/* Conditional View */}
         {isConnoisseurView ? (
           <TechnicalView
-            currentDevice={data.currentDevice}
-            newDevice={data.newDevice}
+            currentDevice={currentDeviceName}
+            newDevice={newDeviceName}
             specs={data.connoisseurSpecs}
           />
         ) : (
@@ -192,11 +195,11 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
                       <TableRow>
                         <TableHead className="font-bold text-tech-dark">Component</TableHead>
                         <TableHead className="font-bold text-tech-dark text-center">
-                          {data.currentDevice}
+                          {currentDeviceName}
                         </TableHead>
                         <TableHead className="font-bold text-tech-dark text-center">Impact</TableHead>
                         <TableHead className="font-bold text-tech-dark text-center">
-                          {data.newDevice}
+                          {newDeviceName}
                         </TableHead>
                         <TableHead className="font-bold text-tech-dark text-center">Why Better?</TableHead>
                       </TableRow>
