@@ -112,4 +112,17 @@ describe('ComparisonResult', () => {
     expect(screen.getByText('-')).toBeInTheDocument();
     expect(screen.queryByText('0/100')).toBeNull();
   });
+
+  it('formats device names in table headers', async () => {
+    const messy = ' messy   name ';
+    const messyData = {
+      ...normalizedData,
+      currentDevice: messy,
+      newDevice: messy,
+    };
+    render(<ComparisonResult data={messyData} onReset={() => {}} />);
+    expect(screen.getAllByRole('columnheader', { name: 'Messy Name' })).toHaveLength(2);
+    await userEvent.click(screen.getByRole('switch'));
+    expect(screen.getAllByRole('columnheader', { name: 'Messy Name' })).toHaveLength(2);
+  });
 });
