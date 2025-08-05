@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -48,6 +48,46 @@ const ComparisonResult = ({ data, onReset }: ComparisonResultProps) => {
   const [isConnoisseurView, setIsConnoisseurView] = useState(false);
   const currentDeviceName = formatDeviceName(data.currentDevice);
   const newDeviceName = formatDeviceName(data.newDevice);
+
+  const jsonLd = useMemo(() => {
+    const specs = data.connoisseurSpecs ?? [];
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement: [
+        {
+          '@type': 'Product',
+          name: currentDeviceName,
+          position: 1,
+          additionalProperty: specs.map((spec) => ({
+            '@type': 'PropertyValue',
+            name: spec.subcategory ? `${spec.category} ${spec.subcategory}` : spec.category,
+            value: spec.current.value,
+          })),
+        },
+        {
+          '@type': 'Product',
+          name: newDeviceName,
+          position: 2,
+          additionalProperty: specs.map((spec) => ({
+            '@type': 'PropertyValue',
+            name: spec.subcategory ? `${spec.category} ${spec.subcategory}` : spec.category,
+            value: spec.new.value,
+          })),
+        },
+      ],
+    };
+  }, [data.connoisseurSpecs, currentDeviceName, newDeviceName]);
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(jsonLd);
+    document.head.appendChild(script);
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, [jsonLd]);
 
   const getRecommendationColor = () => {
     switch (data.recommendation) {
