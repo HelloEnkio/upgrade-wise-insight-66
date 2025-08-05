@@ -26,7 +26,10 @@ const Header = () => {
     <>
       <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-xl border-b border-tech-gray-200/50 shadow-electric">
         <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
+          <nav
+            className="flex items-center justify-between"
+            aria-label="Main navigation"
+          >
             <Link to="/" onClick={handleHomeClick} className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-tech rounded-xl flex items-center justify-center shadow-neon">
                 <span className="text-white font-bold text-sm">IB</span>
@@ -40,7 +43,7 @@ const Header = () => {
                 ✨ 100% Free
               </span>
             </div>
-          </div>
+          </nav>
         </div>
       </header>
       <LeaveResultDialog
