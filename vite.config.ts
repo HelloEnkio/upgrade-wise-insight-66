@@ -8,6 +8,11 @@ export default defineConfig({
     host: "::",
     port: 8080,
   },
+  build: {
+    outDir: "dist",
+    emptyOutDir: true,
+    target: "es2019"
+  },
   plugins: [
     react(),
   ],
