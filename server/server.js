@@ -1,6 +1,8 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const isbot = require('isbot');
+const DIST_PATH = path.resolve(__dirname, '../dist');
 
 const PORT = process.env.PORT || 3001;
 const DAILY_LIMIT = parseInt(process.env.DAILY_LIMIT || '490', 10);
@@ -60,6 +62,20 @@ app.post('/api/increment', (req, res) => {
   usage.count += 1;
   saveUsage();
   res.json({ allowed: true, used: usage.count, remaining: DAILY_LIMIT - usage.count, limit: DAILY_LIMIT });
+});
+
+app.use(express.static(DIST_PATH));
+app.get('*', (req, res) => {
+  const ua = req.get('user-agent') || '';
+  if (isbot(ua)) {
+    const reqPath = req.path.replace(/\/$/, '') || '/';
+    const filePath = reqPath === '/' ? 'index.html' : reqPath.slice(1) + '/index.html';
+    const fullPath = path.join(DIST_PATH, filePath);
+    if (fs.existsSync(fullPath)) {
+      return res.sendFile(fullPath);
+    }
+  }
+  res.sendFile(path.join(DIST_PATH, 'index.html'));
 });
 
 app.listen(PORT, () => {
