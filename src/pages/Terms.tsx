@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,8 +9,22 @@ import { FileText, AlertCircle, Users, Gavel, Globe } from 'lucide-react';
 const Terms = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-tech-gray-50 via-white to-tech-neon/5 font-sans">
+      <Helmet>
+        <title>Terms of Service - Is it Better?</title>
+        <meta
+          name="description"
+          content="The rules and conditions that govern the use of Is it Better?"
+        />
+        <meta property="og:title" content="Terms of Service - Is it Better?" />
+        <meta
+          property="og:description"
+          content="The rules and conditions that govern the use of Is it Better?"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://isitbetter.com/terms" />
+      </Helmet>
       <Header />
-      
+
       <main className="container mx-auto px-6 py-16">
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}

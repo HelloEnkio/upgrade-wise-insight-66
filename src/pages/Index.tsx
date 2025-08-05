@@ -1,10 +1,27 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
 import ComparisonForm from '@/components/ComparisonForm';
 import HowItWorks from '@/components/HowItWorks';
 import Footer from '@/components/Footer';
+
 const Index = () => {
-  return <div className="min-h-screen bg-gradient-to-br from-tech-gray-50 via-white to-tech-neon/5 font-sans">
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-tech-gray-50 via-white to-tech-neon/5 font-sans">
+      <Helmet>
+        <title>Is it Better? - Compare Devices with AI</title>
+        <meta
+          name="description"
+          content="Compare your current device with a new one using AI and discover which one is better."
+        />
+        <meta property="og:title" content="Is it Better? - Compare Devices with AI" />
+        <meta
+          property="og:description"
+          content="Compare your current device with a new one using AI and discover which one is better."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://isitbetter.com/" />
+      </Helmet>
       <Header />
 
       <main className="container mx-auto px-6">
@@ -17,7 +34,9 @@ const Index = () => {
             </span>
             ?
           </h1>
-          <p className="text-xl md:text-2xl text-tech-gray-600 max-w-4xl mx-auto leading-relaxed mb-4">Compare your current device with a new one using AI and discover which one is better.</p>
+          <p className="text-xl md:text-2xl text-tech-gray-600 max-w-4xl mx-auto leading-relaxed mb-4">
+            Compare your current device with a new one using AI and discover which one is better.
+          </p>
           <p className="text-lg text-tech-gray-500 mb-16">
             Get intelligent recommendations powered by <span className="text-tech-electric font-semibold">artificial intelligence</span>.
           </p>
@@ -40,6 +59,8 @@ const Index = () => {
       </main>
 
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Index;

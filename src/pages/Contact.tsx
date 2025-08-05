@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -18,8 +19,22 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-tech-gray-50 via-white to-tech-neon/5 font-sans">
+      <Helmet>
+        <title>Contact Us - Is it Better?</title>
+        <meta
+          name="description"
+          content="Have a question or feedback? Reach out to the Is it Better? team and we'll respond quickly."
+        />
+        <meta property="og:title" content="Contact Us - Is it Better?" />
+        <meta
+          property="og:description"
+          content="Have a question or feedback? Reach out to the Is it Better? team and we'll respond quickly."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://isitbetter.com/contact" />
+      </Helmet>
       <Header />
-      
+
       <main className="container mx-auto px-6 py-16">
         <div className="max-w-4xl mx-auto">
           {/* Hero Section */}
