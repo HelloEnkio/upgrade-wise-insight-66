@@ -26,8 +26,8 @@ npm install
 
 # Configure environment variables
 cp .env.example .env
-# Edit .env and set VITE_GEMINI_API_KEY=<your Gemini key>
 # Optionally set VITE_BACKEND_URL (defaults to http://localhost:3001)
+# Set GEMINI_API_KEY in your environment before starting the server
 ```
 
 ### Development
@@ -35,8 +35,8 @@ cp .env.example .env
 Run the front-end and quota server in separate terminals:
 
 ```sh
-npm run dev       # Vite dev server
-npm run server    # Express quota server on port 3001
+npm run dev                       # Vite dev server
+GEMINI_API_KEY=your-api-key npm run server    # Express quota server on port 3001
 ```
 
 Ensure `VITE_BACKEND_URL` in `.env` matches the port used by the server.
@@ -70,12 +70,7 @@ Ensure `VITE_BACKEND_URL` in `.env` matches the port used by the server.
 
 ## Configuration
 
-Create a `.env` file based on `.env.example` and provide your Gemini API key:
-
-```bash
-cp .env.example .env
-# Edit .env and set VITE_GEMINI_API_KEY=<your Gemini key>
-```
+Create a `.env` file based on `.env.example` for front-end settings. The Gemini API key must be provided to the backend via the `GEMINI_API_KEY` environment variable before starting the server.
 
 The application uses the free Gemini 2.5 Flash model with a daily limit of 500 requests. The code enforces a safety threshold of 490 requests per day to avoid hitting the quota. Responses are limited to 4096 tokens to encourage concise answers and reduce quota usage.
 

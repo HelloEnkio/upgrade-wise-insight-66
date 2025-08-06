@@ -29,9 +29,6 @@ describe('geminiService.checkComparability', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    // Bypass API key check
-    (geminiService as any).apiKey = 'test-key';
-
     const result = await geminiService.checkComparability('iPhone', 'Samsung');
     expect(result).toEqual(second);
   });
@@ -49,8 +46,6 @@ describe('geminiService.checkComparability', () => {
       .mockResolvedValueOnce({ ok: true, json: async () => wrap(response) });
 
     vi.stubGlobal('fetch', fetchMock);
-
-    (geminiService as any).apiKey = 'test-key';
 
     const result = await geminiService.checkComparability('iPhone', 'Samsung');
     expect(result).toEqual({
