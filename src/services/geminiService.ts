@@ -15,14 +15,10 @@ interface SpecsRequest {
 }
 
 class GeminiServiceClass {
-  // Clé API chargée depuis les variables d'environnement (Vite)
-  private apiKey: string = import.meta.env.VITE_GEMINI_API_KEY ?? '';
   private backendUrl: string = import.meta.env.VITE_BACKEND_URL ?? 'http://localhost:3001';
   private dailyRequestCount: number = 0;
   private lastResetDate: string = '';
   private readonly MAX_DAILY_REQUESTS = 490; // Sécurité: 490 au lieu de 500
-  // Utilise le modèle Gemini 2.5 Flash en version gratuite
-  private readonly GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
   private readonly ADMIN_EMAIL = 'votre-email@example.com'; // Email pour les alertes
   private readonly maxOutputTokens: number = parseInt(
     import.meta.env.VITE_GEMINI_MAX_OUTPUT_TOKENS ?? '4096',
@@ -31,9 +27,6 @@ class GeminiServiceClass {
 
   constructor() {
     this.initializeCounters();
-    if (import.meta.env.DEV) {
-      console.log('Gemini key loaded:', Boolean(this.apiKey));
-    }
   }
 
   private initializeCounters() {
@@ -123,10 +116,6 @@ class GeminiServiceClass {
   }
 
   private async callGeminiAPI(prompt: string): Promise<any> {
-    if (!this.apiKey) {
-      throw new Error('Clé API Gemini non configurée côté serveur - Contactez l\'administrateur');
-    }
-
     const allowed = await this.checkBackendQuota();
     if (!allowed) {
       throw new Error(`Service temporairement indisponible. Réessayez demain.`);
@@ -134,31 +123,25 @@ class GeminiServiceClass {
 
     console.log('Gemini request prompt:', prompt);
 
-    const response = await fetch(`${this.GEMINI_API_URL}?key=${this.apiKey}`, {
+    const response = await fetch(`${this.backendUrl}/api/gemini`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        contents: [{
-          parts: [{
-            text: prompt
-          }]
-        }],
-        generationConfig: {
-          temperature: 0.7,
-          topK: 40,
-          topP: 0.95,
-          // Limit output length to keep responses concise
-          maxOutputTokens: this.maxOutputTokens,
-        }
-      })
+        prompt,
+        maxOutputTokens: this.maxOutputTokens,
+      }),
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ message: 'Unknown error' }));
+      const errorData = await response
+        .json()
+        .catch(() => ({ message: 'Unknown error' }));
       console.error('❌ Gemini API Error:', response.status, errorData);
-      throw new Error(`Service d'analyse temporairement indisponible. Réessayez dans quelques instants.`);
+      throw new Error(
+        `Service d'analyse temporairement indisponible. Réessayez dans quelques instants.`
+      );
     }
 
     const json = await response.json();
