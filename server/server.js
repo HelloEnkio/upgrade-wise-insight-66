@@ -106,17 +106,24 @@ app.post('/api/gemini', async (req, res) => {
   }
 });
 
-app.use(express.static(DIST_PATH));
-app.get('*', (req, res) => {
+app.use((req, res, next) => {
   const ua = req.get('user-agent') || '';
   if (isbot(ua)) {
-    const reqPath = req.path.replace(/\/$/, '') || '/';
-    const filePath = reqPath === '/' ? 'index.html' : reqPath.slice(1) + '/index.html';
-    const fullPath = path.join(DIST_PATH, filePath);
-    if (fs.existsSync(fullPath)) {
-      return res.sendFile(fullPath);
+    const normalizedPath = path.normalize(req.path);
+    if (normalizedPath.includes('..')) {
+      return res.status(400).send('Invalid path');
+    }
+    const target = path.resolve(DIST_PATH, '.' + normalizedPath, 'index.html');
+    if (target.startsWith(DIST_PATH)) {
+      req.url = '/' + path.relative(DIST_PATH, target).replace(/\\/g, '/');
     }
   }
+  next();
+});
+
+app.use(express.static(DIST_PATH));
+
+app.get('*', (req, res) => {
   res.sendFile(path.join(DIST_PATH, 'index.html'));
 });
 
