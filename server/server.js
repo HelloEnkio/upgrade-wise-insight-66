@@ -2,6 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const isbot = require('isbot');
+const cors = require('cors');
+const helmet = require('helmet');
 const DIST_PATH = path.resolve(__dirname, '../dist');
 
 const PORT = process.env.PORT || 3001;
@@ -39,14 +41,10 @@ loadUsage();
 resetIfNeeded();
 
 const app = express();
+app.disable('x-powered-by');
+app.use(helmet());
+app.use(cors({ origin: ['https://domaine.com'] }));
 app.use(express.json());
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.sendStatus(204);
-  next();
-});
 
 app.get('/api/usage', (req, res) => {
   resetIfNeeded();
