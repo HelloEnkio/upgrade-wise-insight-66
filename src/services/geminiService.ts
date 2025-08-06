@@ -25,6 +25,17 @@ class GeminiServiceClass {
     10
   );
 
+  private sanitizeForLogging(value: any, maxLength = 100): string {
+    const str = typeof value === 'string' ? value : JSON.stringify(value);
+    return str.length > maxLength ? `${str.slice(0, maxLength)}…` : str;
+  }
+
+  private logDev(label: string, value: any, type: 'log' | 'warn' | 'error' = 'log') {
+    if (!import.meta.env.DEV) return;
+    const output = this.sanitizeForLogging(value);
+    console[type](label, output);
+  }
+
   constructor() {
     this.initializeCounters();
   }
@@ -121,7 +132,7 @@ class GeminiServiceClass {
       throw new Error(`Service temporairement indisponible. Réessayez demain.`);
     }
 
-    console.log('Gemini request prompt:', prompt);
+    this.logDev('Gemini request prompt:', prompt);
 
     const response = await fetch(`${this.backendUrl}/api/gemini`, {
       method: 'POST',
@@ -145,7 +156,7 @@ class GeminiServiceClass {
     }
 
     const json = await response.json();
-    console.log('Gemini raw response:', JSON.stringify(json));
+    this.logDev('Gemini raw response:', json);
 
     this.logLocalUsage();
     return json;
@@ -173,7 +184,8 @@ class GeminiServiceClass {
       result.category1 = simplifyCategory(result.category1);
       result.category2 = simplifyCategory(result.category2);
     } catch (error) {
-      console.error('Failed to parse Gemini response', { prompt, response });
+      console.error('Failed to parse Gemini response');
+      this.logDev('Parse error details', { prompt, response });
       if (error instanceof GeminiParseError || error instanceof GeminiTokenLimitError) {
         throw error;
       }
@@ -188,7 +200,8 @@ class GeminiServiceClass {
         result.category1 = simplifyCategory(result.category1);
         result.category2 = simplifyCategory(result.category2);
       } catch (error) {
-        console.error('Gemini retry failed', { prompt, error });
+        console.error('Gemini retry failed', error);
+        this.logDev('Gemini retry failed prompt', prompt);
         // Fallback to the initial result
       }
     }
@@ -211,7 +224,8 @@ class GeminiServiceClass {
     try {
       return parseGeminiResponse(response);
     } catch (error) {
-      console.error('Failed to parse Gemini response', { prompt, response });
+      console.error('Failed to parse Gemini response');
+      this.logDev('Parse error details', { prompt, response });
       if (error instanceof GeminiParseError || error instanceof GeminiTokenLimitError) {
         throw error;
       }
@@ -269,7 +283,8 @@ Focus on performance, features, value and user experience. Limit the JSON respon
         }
       }
 
-      console.error('Failed to parse Gemini response', { prompt, response });
+      console.error('Failed to parse Gemini response');
+      this.logDev('Parse error details', { prompt, response });
       if (error instanceof GeminiParseError) {
         throw error;
       }
@@ -294,7 +309,8 @@ Be accurate and comprehensive. Limit the JSON response to under 500 tokens.`;
     try {
       return parseGeminiResponse(response);
     } catch (error) {
-      console.error('Failed to parse Gemini response', { prompt, response });
+      console.error('Failed to parse Gemini response');
+      this.logDev('Parse error details', { prompt, response });
       if (error instanceof GeminiParseError || error instanceof GeminiTokenLimitError) {
         throw error;
       }
