@@ -1,4 +1,5 @@
 [phases.setup]
+nixPkgs = ["nodejs_18", "bun"]
 aptPkgs = [
   "libx11-xcb1","libnss3","libatk1.0-0","libatk-bridge2.0-0","libxss1","libgtk-3-0",
   "libasound2","libxshmfence1","libgbm1","libglu1-mesa","libpangocairo-1.0-0",
